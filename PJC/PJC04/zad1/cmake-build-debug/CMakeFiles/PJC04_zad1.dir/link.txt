@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/PJC04_zad1.dir/main.cpp.o  -o PJC04_zad1 
