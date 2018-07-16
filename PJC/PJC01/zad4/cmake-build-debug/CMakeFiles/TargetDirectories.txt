@@ -1,3 +1,0 @@
-/home/lucas/CLionProjects/PJC01_zad4/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/lucas/CLionProjects/PJC01_zad4/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/lucas/CLionProjects/PJC01_zad4/cmake-build-debug/CMakeFiles/PJC01_zad4.dir
