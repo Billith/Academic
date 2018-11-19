@@ -62,7 +62,6 @@ def start_listener():
     print '[*] Command listener started'
 
 
-
 generating_thread = threading.Thread(target=generate_reads, args=(s,))
 generating_thread.start()
 start_listener()
@@ -72,4 +71,3 @@ print '[*] Starts reading from serial loopback'
 while True:
     output = sio.readline()
     parse_data(output)
-
