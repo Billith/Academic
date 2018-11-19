@@ -36,7 +36,7 @@ def generate_reads(s):
 def parse_data(data):
     time,lighting_level,temp,pressure,obstacle = data.split('|')
     # Debug
-    print 'czas: %s\npoziom oswietlenia: %s\ntemperatura: %s\ncisnienie: %s\nprzeszkoda: %s' % (time,lighting_level,temp,pressure,obstacle)
+    #print 'czas: %s\npoziom oswietlenia: %s\ntemperatura: %s\ncisnienie: %s\nprzeszkoda: %s' % (time,lighting_level,temp,pressure,obstacle)
     if obstacle.strip() == unicode('1'):
         send_obstacle_info()
 
