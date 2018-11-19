@@ -17,8 +17,8 @@ class threaded_tcp_server(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
 
 class tcp_command_handler(SocketServer.BaseRequestHandler):
     def handle(self):
-        if self.request.getpeername()[0].strip() != '127.0.0.1':
-            global console_ip
+    	global console_ip
+        if console_ip == '':
             console_ip = self.request.getpeername()[0]
         command = self.request.recv(1024)
         print '[cmd] %s ' % command
@@ -36,7 +36,7 @@ def generate_reads(s):
 def parse_data(data):
     time,lighting_level,temp,pressure,obstacle = data.split('|')
     # Debug
-    #print 'czas: %s\npoziom oswietlenia: %s\ntemperatura: %s\ncisnienie: %s\nprzeszkoda: %s' % (time,lighting_level,temp,pressure,obstacle)
+    print 'czas: %s\npoziom oswietlenia: %s\ntemperatura: %s\ncisnienie: %s\nprzeszkoda: %s' % (time,lighting_level,temp,pressure,obstacle)
     if obstacle.strip() == unicode('1'):
         send_obstacle_info()
 
