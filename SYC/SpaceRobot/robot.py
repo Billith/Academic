@@ -91,11 +91,11 @@ def store_data(time,lighting_level,temp,pressure,obstacle):
     global storage
     global measurements
     storage[measurements] = {
-    	'time'			 : time,
-    	'lighting_level' : lighting_level,
-    	'temp' 			 : temp,
-    	'pressure'		 : pressure,
-    	'obstacle'		 : obstacle,
+    	'time'				: time,
+    	'lighting_level'	        : lighting_level,
+    	'temp'				: temp,
+    	'pressure'			: pressure,
+    	'obstacle'			: obstacle,
     }
 
 def start_listener():
