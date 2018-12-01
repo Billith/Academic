@@ -5,12 +5,14 @@ import threading
 import SocketServer
 import sys
 import json
+
 from datetime import datetime
 from random import randint
 from time import sleep
 
 
-s = serial.serial_for_url('loop://', timeout=1)
+serial_interface = serial.serial_for_url('loop://', timeout=1)
+#serial_interface = serial.Serial('/dev/ttyS0')
 console_ip = ''
 storage = {}
 measurements = 0
@@ -92,7 +94,7 @@ def store_data(time,lighting_level,temp,pressure,obstacle):
     global measurements
     storage[measurements] = {
     	'time'				: time,
-    	'lighting_level'	        : lighting_level,
+    	'lighting_level'	: lighting_level,
     	'temp'				: temp,
     	'pressure'			: pressure,
     	'obstacle'			: obstacle,
@@ -105,12 +107,13 @@ def start_listener():
     print '[*] Command listener started'
 
 
-generating_thread = threading.Thread(target=generate_measurements, args=(s,))
+generating_thread = threading.Thread(target=generate_measurements, args=(serial_interface))
 generating_thread.start()
 start_listener()
 
-sio = io.TextIOWrapper(io.BufferedRWPair(s,s))
-print '[*] Starts reading from serial loopback'
+print '[*] Starts reading from serial intereface'
 while True:
-    output = sio.readline()
-    parse_data(output)
+    output = serial_interface.readline().strip().rstrip('\n\r')
+    if output:
+        print '[serial] %s' % output
+        parse_data(output)
