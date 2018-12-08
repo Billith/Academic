@@ -107,7 +107,7 @@ def start_listener():
     print '[*] Command listener started'
 
 
-generating_thread = threading.Thread(target=generate_measurements, args=(serial_interface))
+generating_thread = threading.Thread(target=generate_measurements, args=(serial_interface,))
 generating_thread.start()
 start_listener()
 
