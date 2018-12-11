@@ -79,7 +79,7 @@ def parse_data(data):
     	print '[*] Measurement sent!'
 
 def send_obstacle_info():
-	# przesylanie informacji nie powinno sie zaczac dopoki z konsoli
+    # przesylanie informacji nie powinno sie zaczac dopoki z konsoli
     # nie zostanie wyslany dowolny, komunikat (przypisanie IP konsoli)
     global console_ip
     if console_ip == '':
