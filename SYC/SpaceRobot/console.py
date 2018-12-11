@@ -38,6 +38,7 @@ def start_listener():
 ip = raw_input("[o] Enter robot's IP: ")
 start_listener()
 while True:
+    global verbose
     cmd = raw_input('console # ')
     if cmd.lower() == 'quit' or cmd.lower() == 'exit':
         server.shutdown()
@@ -45,18 +46,24 @@ while True:
     elif not cmd:
         continue
     elif cmd == 'verbose off':
-    	global verbose
     	verbose = False
     	continue
     elif cmd == 'verbose on':
-    	global verbose
     	verbose = True
     	continue
     elif cmd == 'back':
     	pass
     elif cmd == 'sendall':
     	pass
+    elif cmd == 'ping':
+        pass
+    elif cmd == 'help':
+        print '\tverbose \t[on/off]\n\tback\n\tsendall\n\tping'
+        continue
     else:
-    	print "[!] error: unknown command: '%s'" % cmd
+    	print "[!] error: unknown command: '%s'\nuse 'help' to see all available commands" % cmd
     	continue
-    send_command(cmd, (ip,2323))
+    try:
+        send_command(cmd, (ip,2323))
+    except:
+        pass
