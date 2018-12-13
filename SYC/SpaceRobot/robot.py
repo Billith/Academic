@@ -46,7 +46,6 @@ class tcp_command_handler(SocketServer.BaseRequestHandler):
 
 def generate_measurements(s):
     sio = io.TextIOWrapper(io.BufferedRWPair(s,s))
-    print '[*] Starts generating data'
     while True:
         # format stringa z pomiarami:
         # czas|oswietlenie|temperatura|cisnienie|przeszkoda
@@ -145,16 +144,16 @@ def start_listener():
     server = threaded_tcp_server(('0.0.0.0', 2323), tcp_command_handler)
     server_thread = threading.Thread(target=server.serve_forever)
     server_thread.start()
-    print '[*] Command listener started'
 
-# TODO 'Umożliwić zmianę parametrów (częstość pomiarów,
+# TODO 'Umozliwic zmiane parametrow (czestosc pomiarow,
 # czas misji) robota poprzez komendy ze stacji bazowej.'
 
 
 generating_thread = threading.Thread(target=generate_measurements, args=(serial_interface,))
+print '[*] Starts generating data'
 generating_thread.start()
 start_listener()
-
+print '[*] Command listener started'
 print '[*] Starts reading from serial intereface'
 while mission:
     output = serial_interface.readline().strip().rstrip('\n\r')
@@ -162,4 +161,3 @@ while mission:
         print '[serial] %s' % output
         parse_data(output)
     check_mission_time()
-

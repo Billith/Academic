@@ -13,6 +13,7 @@ class threaded_tcp_server(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
 class tcp_command_handler(SocketServer.BaseRequestHandler):
     def handle(self):
         command = self.request.recv(1024 * 1024)
+        # Ignoruje informacje o przeszkodzie gdy gadatliwy tryb jest wylaczony
         if command == 'Przeszkoda! Procedura omijania wykonana' and not verbose:
             return
         print '\n[robot] %s ' % command
@@ -32,13 +33,12 @@ def start_listener():
     server = threaded_tcp_server(('0.0.0.0', 2424), tcp_command_handler)
     server_thread = threading.Thread(target=server.serve_forever)
     server_thread.start()
-    print '[*] Robot responses listener started'
 
 
 ip = raw_input("[o] Enter robot's IP: ")
 start_listener()
+print '[*] Robot responses listener started'
 while True:
-    global verbose
     cmd = raw_input('console # ')
     if cmd.lower() == 'quit' or cmd.lower() == 'exit':
         server.shutdown()
