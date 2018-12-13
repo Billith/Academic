@@ -51,12 +51,8 @@ while True:
     elif cmd == 'verbose on':
     	verbose = True
     	continue
-    elif cmd == 'back':
+    elif cmd == 'back' or cmd == 'sendall' or cmd == 'ping':
     	pass
-    elif cmd == 'sendall':
-    	pass
-    elif cmd == 'ping':
-        pass
     elif cmd == 'help':
         print '\tverbose \t[on/off]\n\tback\n\tsendall\n\tping'
         continue
