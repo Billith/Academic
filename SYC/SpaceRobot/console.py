@@ -43,15 +43,13 @@ while True:
     if cmd.lower() == 'quit' or cmd.lower() == 'exit':
         server.shutdown()
         sys.exit(0)
-    elif not cmd:
-        continue
     elif cmd == 'verbose off':
     	verbose = False
     	continue
     elif cmd == 'verbose on':
     	verbose = True
     	continue
-    elif cmd == 'back' or cmd == 'sendall' or cmd == 'ping':
+    elif cmd == 'back' or cmd == 'sendall' or cmd == 'ping' or not cmd:
     	pass
     elif cmd == 'help':
         print '\tverbose \t[on/off]\n\tback\n\tsendall\n\tping'
@@ -59,6 +57,7 @@ while True:
     else:
     	print "[!] error: unknown command: '%s'\nuse 'help' to see all available commands" % cmd
     	continue
+    	
     try:
         send_command(cmd, (ip,2323))
     except:
