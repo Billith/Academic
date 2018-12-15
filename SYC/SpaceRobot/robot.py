@@ -17,6 +17,7 @@ serial_interface = serial.serial_for_url('loop://', timeout=1)
 console_ip = ''
 storage = {}
 measurements = 0
+measurements_frequency = 10
 robot_id = 1
 mission = True
 mission_duration = 600 # w sekundach
@@ -31,10 +32,20 @@ class tcp_command_handler(SocketServer.BaseRequestHandler):
     	global console_ip
     	global storage
         global robot_id
+        global measurements_frequency
+        global mission_duration
         if console_ip == '':
             console_ip = self.request.getpeername()[0]
         command = self.request.recv(1024)
         print '[cmd] %s ' % command
+        if command[0:3] == 'set':
+        	if command[4:6] == 'mf':
+        		measurements_frequency = int(command[6:].strip())
+        		print '[!] Measurements frequency changed to ' + command[6:].strip()
+        	elif command[4:6] == 'mt':
+        		mission_duration = int(command[6:].strip())
+        		print '[!] Mission duration changed to ' + command[6:].strip()
+
         # Przeslanie wszystkich dokonanych do tej pory pomiarow.
         if command == 'sendall':
             send_measurement(json.dumps(storage))\
@@ -66,12 +77,13 @@ def parse_data(data):
     global measurements
     global storage
     global robot_id
+    global measurements_frequency
     measurements += 1
     time,lighting_level,temp,pressure,obstacle = data.strip().split('|')
     store_data(time,lighting_level,temp,pressure,obstacle)
     if obstacle.strip() == unicode('1'):
         send_obstacle_info()
-    if measurements % 10 == 0:
+    if measurements % measurements_frequency == 0:
         measurement = storage[measurements]
         measurement['robot_id'] = robot_id
     	send_measurement(storage[measurements])

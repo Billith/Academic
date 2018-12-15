@@ -40,6 +40,8 @@ start_listener()
 print '[*] Robot responses listener started'
 while True:
     cmd = raw_input('console # ')
+    cmd_array = cmd.split(' ')
+    #print 'debug: ' + str(len(cmd_array))
     if cmd.lower() == 'quit' or cmd.lower() == 'exit':
         server.shutdown()
         sys.exit(0)
@@ -49,11 +51,25 @@ while True:
     elif cmd == 'verbose on':
     	verbose = True
     	continue
-    elif cmd == 'back' or cmd == 'sendall' or cmd == 'ping' or not cmd:
+    elif cmd == 'back' or cmd == 'sendall' or cmd == 'ping':
     	pass
+    elif not cmd:
+    	continue
     elif cmd == 'help':
         print '\tverbose \t[on/off]\n\tback\n\tsendall\n\tping'
         continue
+    elif cmd_array[0] == 'set':
+    	if len(cmd_array) != 3:
+    		print '[!] error: wrong set command!'
+    		continue
+    	if cmd_array[1] == 'mf':
+    		pass
+    	elif cmd_array[1] == 'mt':
+    		pass
+    	else:
+    		print '[!] error: wrong set command!'
+    		continue
+
     else:
     	print "[!] error: unknown command: '%s'\nuse 'help' to see all available commands" % cmd
     	continue
