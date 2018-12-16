@@ -28,7 +28,7 @@ class threaded_tcp_server(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
 
 class tcp_command_handler(SocketServer.BaseRequestHandler):
     def handle(self):
-    	global console_ip
+        global console_ip
         global measurements_frequency
         global mission_duration
 
@@ -39,21 +39,21 @@ class tcp_command_handler(SocketServer.BaseRequestHandler):
         print '[cmd] %s ' % command
 
         if command[0:3] == 'set':
-        	if command[4:6] == 'mf':
-        		measurements_frequency = int(command[6:].strip())
-        		print '[!] Measurements frequency changed to ' + command[6:].strip()
-        		self.request.sendall('[!] Measurements frequency changed to ' + command[6:].strip())
-        	elif command[4:6] == 'mt':
-        		mission_duration = int(command[6:].strip())
-        		print '[!] Mission duration changed to ' + command[6:].strip()
-        		self.request.sendall('[!] Mission duration changed to ' + command[6:].strip())
+            if command[4:6] == 'mf':
+                measurements_frequency = int(command[6:].strip())
+                print '[!] Measurements frequency changed to ' + command[6:].strip()
+                self.request.sendall('[!] Measurements frequency changed to ' + command[6:].strip())
+            elif command[4:6] == 'mt':
+                mission_duration = int(command[6:].strip())
+                print '[!] Mission duration changed to ' + command[6:].strip()
+                self.request.sendall('[!] Mission duration changed to ' + command[6:].strip())
 
         # Przeslanie wszystkich dokonanych do tej pory pomiarow.
         if command == 'sendall':
-        	self.request.sendall(json.dumps(storage))
+            self.request.sendall(json.dumps(storage))
         # Odebranie komendy powrotu do stacji bazowej.
         elif command == 'back':
-        	self.request.sendall('robot #%s comming back' % robot_id)
+            self.request.sendall('robot #%s comming back' % robot_id)
         elif command == 'ping':
             self.request.sendall('robot #%s => pong' % robot_id)
 
@@ -64,11 +64,11 @@ def generate_measurements(s):
         # format stringa z pomiarami:
         # czas|oswietlenie|temperatura|cisnienie|przeszkoda
         sio.write(unicode('%s|%i|%i|%i|%i\n' % (
-        	str(datetime.now()), 
-        	randint(450,700), 
-        	randint(15,25), 
-        	randint(950,1100), 
-        	randint(0,10)))
+            str(datetime.now()), 
+            randint(450,700), 
+            randint(15,25), 
+            randint(950,1100), 
+            randint(0,10)))
         )
         sio.flush()
         sleep(3)
@@ -85,8 +85,8 @@ def parse_data(data):
     if obstacle.strip() == unicode('1'):
         send_obstacle_info()
     if measurements % measurements_frequency == 0:
-    	send_data_to_console(json.dumps(storage[measurements]))
-    	print '[*] Measurement sent!'
+        send_data_to_console(json.dumps(storage[measurements]))
+        print '[*] Measurement sent!'
 
 def send_obstacle_info():
     # przesylanie informacji nie powinno sie zaczac dopoki z konsoli
@@ -112,12 +112,12 @@ def store_data(time,lighting_level,temp,pressure,obstacle):
     global storage
 
     storage[measurements] = {
-    	'time'				: time,
-    	'lighting_level'	: lighting_level,
-    	'temp'				: temp,
-    	'pressure'			: pressure,
-    	'obstacle'			: obstacle,
-    	'robot_id'			: robot_id,
+        'time'              : time,
+        'lighting_level'    : lighting_level,
+        'temp'              : temp,
+        'pressure'          : pressure,
+        'obstacle'          : obstacle,
+        'robot_id'          : robot_id,
     }
 
 # Sprawdzanie czy minal okreslony czas misji. Jesli minal robot

@@ -27,15 +27,15 @@ def send_command(cmd, (ip,port)):
         if cmd == 'sendall':
             pprint.pprint(ast.literal_eval(s.recv(1024 * 1024)))
         else:
-        	print '[answer] %s' % s.recv(1024 * 1024)
+            print '[answer] %s' % s.recv(1024 * 1024)
     finally:
         s.close()
 
 def start_listener():
-	server = threaded_tcp_server(('0.0.0.0', 2424), tcp_command_handler)
-	server_thread = threading.Thread(target=server.serve_forever)
-	server_thread.start()
-	return server
+    server = threaded_tcp_server(('0.0.0.0', 2424), tcp_command_handler)
+    server_thread = threading.Thread(target=server.serve_forever)
+    server_thread.start()
+    return server
 
     
 server = start_listener()
@@ -44,21 +44,21 @@ print '[*] Robot responses listener started'
 while True:
     cmd = raw_input('console # ').strip().lower().split(' ')
     if cmd[0] == '':
-    	continue
+        continue
     elif cmd[0] == 'quit' or cmd[0] == 'exit':
         server.shutdown()
         break
     elif cmd[0] == 'back' or cmd[0] == 'sendall' or cmd[0] == 'ping':
-    	pass
+        pass
     elif cmd[0] == 'help':
         print '   back\n   sendall\n   ping\n   set\t[mf\\mt]\t[value]'
         continue
     elif cmd[0] == 'set' and len(cmd) == 3 and (cmd[1] == 'mf' or cmd[1] == 'mt'):
-    	pass
+        pass
     else:
-    	print "[!] error: unknown command: '%s'\nuse 'help' to see all available commands" % ' '.join(cmd)
-    	continue
-    	
+        print "[!] error: unknown command: '%s'\nuse 'help' to see all available commands" % ' '.join(cmd)
+        continue
+
     try:
         send_command(' '.join(cmd), (ip,2323))
     except:
