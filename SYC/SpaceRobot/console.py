@@ -6,6 +6,44 @@ import SocketServer
 import pprint
 import ast
 
+from cmd import Cmd
+
+
+class Terminal(Cmd):
+    prompt = 'console # '
+
+    def __init__(self, server, robot_ip):
+        Cmd.__init__(self)
+        self.server = server
+        self.robot_ip = robot_ip
+
+    def do_exit(self, args):
+        self.server.shutdown()
+        return True
+
+    def do_ping(self, args):
+        send_command('ping', self.robot_ip)
+
+    def do_back(self, args):
+        send_command('back', self.robot_ip)
+
+    def do_sendall(self, args):
+        send_command('sendall', self.robot_ip)
+
+    def do_set(self, args):
+        params = args.strip().split()
+        if len(params) == 2 and params[0] == 'mf':
+            send_command('set mf' + params[1], self.robot_ip)
+        elif len(params) == 2 and params[0] == 'mt':
+            send_command('set mt' + params[1], self.robot_ip)
+        else:
+            self.default('set ' + args)
+
+    def emptyline(self):
+        pass
+
+    def default(self, args):
+        print "[!] error: unknown command: '%s'\nuse 'help' to see all available commands" % args
 
 class threaded_tcp_server(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
     allow_reuse_address = True
@@ -19,15 +57,17 @@ class tcp_command_handler(SocketServer.BaseRequestHandler):
         else:
             print '\n[robot] %s' % command
 
-def send_command(cmd, (ip,port)):
+def send_command(cmd, ip):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect((ip,port))
     try:
+        s.connect((ip,2323))
         s.sendall(cmd)
         if cmd == 'sendall':
             pprint.pprint(ast.literal_eval(s.recv(1024 * 1024)))
         else:
             print '[answer] %s' % s.recv(1024 * 1024)
+    except:
+        pass
     finally:
         s.close()
 
@@ -40,26 +80,5 @@ def start_listener():
     
 server = start_listener()
 ip = raw_input("[o] Enter robot's IP: ")
-print '[*] Robot responses listener started'
-while True:
-    cmd = raw_input('console # ').strip().lower().split(' ')
-    if cmd[0] == '':
-        continue
-    elif cmd[0] == 'quit' or cmd[0] == 'exit':
-        server.shutdown()
-        break
-    elif cmd[0] == 'back' or cmd[0] == 'sendall' or cmd[0] == 'ping':
-        pass
-    elif cmd[0] == 'help':
-        print '   back\n   sendall\n   ping\n   set\t[mf\\mt]\t[value]'
-        continue
-    elif cmd[0] == 'set' and len(cmd) == 3 and (cmd[1] == 'mf' or cmd[1] == 'mt'):
-        pass
-    else:
-        print "[!] error: unknown command: '%s'\nuse 'help' to see all available commands" % ' '.join(cmd)
-        continue
-
-    try:
-        send_command(' '.join(cmd), (ip,2323))
-    except:
-        pass
+terminal = Terminal(server, ip)
+terminal.cmdloop()
