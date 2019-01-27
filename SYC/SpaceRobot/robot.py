@@ -31,6 +31,7 @@ class tcp_command_handler(SocketServer.BaseRequestHandler):
         global console_ip
         global measurements_frequency
         global mission_duration
+        global storage
 
         command = self.request.recv(1024 * 1024)
         print '[cmd] %s ' % command
