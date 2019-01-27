@@ -32,9 +32,6 @@ class tcp_command_handler(SocketServer.BaseRequestHandler):
         global measurements_frequency
         global mission_duration
 
-        if console_ip == '':
-            console_ip = self.request.getpeername()[0]
-
         command = self.request.recv(1024 * 1024)
         print '[cmd] %s ' % command
 
@@ -47,15 +44,19 @@ class tcp_command_handler(SocketServer.BaseRequestHandler):
                 mission_duration = int(command[6:].strip())
                 print '[!] Mission duration changed to ' + command[6:].strip()
                 self.request.sendall('[!] Mission duration changed to ' + command[6:].strip())
-
         # Przeslanie wszystkich dokonanych do tej pory pomiarow.
-        if command == 'sendall':
+        elif command == 'sendall':
             self.request.sendall(json.dumps(storage))
         # Odebranie komendy powrotu do stacji bazowej.
         elif command == 'back':
             self.request.sendall('robot #%s comming back' % robot_id)
         elif command == 'ping':
             self.request.sendall('robot #%s => pong' % robot_id)
+        elif command == 'hello':
+            self.request.sendall('hi')
+            console_ip = self.request.getpeername()[0]
+            print '[!] Console attached: %s' % console_ip
+        
 
 def generate_measurements(s):
     sio = io.TextIOWrapper(io.BufferedRWPair(s,s))
@@ -78,13 +79,14 @@ def generate_measurements(s):
 # wysylu informacji o napotkaniu przeszkody i wykonaniu manewru.
 def parse_data(data):
     global measurements
+    global console_ip
 
     measurements += 1
     time,lighting_level,temp,pressure,obstacle = data.strip().split('|')
     store_data(time,lighting_level,temp,pressure,obstacle)
     if obstacle.strip() == unicode('1'):
         send_obstacle_info()
-    if measurements % measurements_frequency == 0:
+    if measurements % measurements_frequency == 0 and console_ip != '':
         send_data_to_console(json.dumps(storage[measurements]))
         print '[*] Measurement sent!'
 

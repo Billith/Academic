@@ -71,6 +71,18 @@ def send_command(cmd, ip):
     finally:
         s.close()
 
+def send_hello_packet(ip):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.settimeout(5)
+    try:
+        s.connect((ip,2323))
+        s.sendall('hello')
+        return s.recv(1024 * 1024)
+    except:
+        return ''
+    finally:
+        s.close()
+
 def start_listener():
     server = threaded_tcp_server(('0.0.0.0', 2424), tcp_command_handler)
     server_thread = threading.Thread(target=server.serve_forever)
@@ -79,6 +91,12 @@ def start_listener():
 
     
 server = start_listener()
-ip = raw_input("[o] Enter robot's IP: ")
+res = ''
+while res == '':
+    ip = raw_input("[o] Enter robot's IP: ")
+    res = send_hello_packet(ip)
+    if res == '':
+        print '[!] Cannot connect to the robot! Check ip and try again.'
+
 terminal = Terminal(server, ip)
 terminal.cmdloop()
