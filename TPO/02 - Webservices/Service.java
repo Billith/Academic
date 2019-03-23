@@ -41,6 +41,10 @@ public class Service {
         return getHTTPResponseBody(weatherFormattedApiUrl);
     }
 
+    public String getWeather() {
+        return this.getWeather(this.city);
+    }
+
     public Double getRateFor(String currency) {
         this.usersProvidedCurrency = currency;
         String currencyRateFormattedApiUrl = String.format(currencyRateApiUrl, currency);
@@ -121,18 +125,6 @@ public class Service {
         this.countryLocale = getCountryLocale();
         this.countryCurrency = Currency.getInstance(this.countryLocale);
         System.out.println(this.countryLocale.getDisplayCountry());
-    }
-
-    public void setCountryLocale(Locale countryLocale) {
-        this.countryLocale = countryLocale;
-    }
-
-    public Currency getCountryCurrency() {
-        return countryCurrency;
-    }
-
-    public void setCountryCurrency(Currency countryCurrency) {
-        this.countryCurrency = countryCurrency;
     }
 
     public String getCity() {

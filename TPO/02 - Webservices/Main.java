@@ -16,7 +16,7 @@ public class Main {
     Double rate1 = s.getRateFor("USD");
     Double rate2 = s.getNBPRate();
     // ...
-    MainWindow.startUI(s, weatherJson, rate1, rate2);
+    MainWindow.startUI(s, rate1, rate2);
     // część uruchamiająca GUI
   }
 }
