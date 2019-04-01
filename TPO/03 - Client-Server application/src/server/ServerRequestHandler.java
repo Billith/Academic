@@ -30,7 +30,7 @@ public class ServerRequestHandler implements Runnable {
 
     private String parseRequest(String request) {
         String[] requestParts = request.split("\\|");
-        String wordTranslation = Server.dicts.translateWord(requestParts[0], requestParts[1]);
+        String wordTranslation = Server.dictionaries.translateWord(requestParts[0], requestParts[1]);
         clientPort = Integer.parseInt(requestParts[2]);
         return wordTranslation;
     }

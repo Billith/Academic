@@ -7,11 +7,11 @@ public class Server {
 
     ServerSocket listeningSocket;
     private final int port = 31337;
-    protected static Dictionaries dicts;
+    protected static Dictionaries dictionaries;
 
     public Server() {
         try {
-            this.dicts = new Dictionaries();
+            this.dictionaries = new Dictionaries();
             startListening();
         } catch (IOException e) {
             e.printStackTrace();

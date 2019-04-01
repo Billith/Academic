@@ -16,6 +16,7 @@ public class Dictionaries {
     public Dictionaries() throws IOException {
         this.dictionariesMap = new HashMap<>();
         parseDictionaries();
+        printAllDictionaries();
     }
 
     private void parseDictionaries() throws IOException {
@@ -33,7 +34,7 @@ public class Dictionaries {
     private int parseDictionaryFile(Path file) throws FileNotFoundException {
         Map<String,String> dictionary = new HashMap<>();
         File dictionaryFile = new File(file.toUri());
-        Scanner reader = new Scanner(dictionaryFile);
+        Scanner reader = new Scanner(dictionaryFile, "UTF-8");
         int wordCounter = 0;
         while (reader.hasNext()) {
             String[] words = reader.nextLine().split(":");
