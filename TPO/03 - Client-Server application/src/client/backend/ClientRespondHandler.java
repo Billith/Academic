@@ -21,8 +21,8 @@ public class ClientRespondHandler {
             InputStream respondSocketStream = this.respondSocket.getInputStream();
             String output = Utils.readStringFromStream(respondSocketStream);
             System.out.println("[Client] Got server response : " + output);
-            if(MainWindow.serverResponseTextField != null)
-                MainWindow.serverResponseTextField.setText(output);
+            if(MainWindow.outputTextField != null)
+                MainWindow.outputTextField.setText(output);
         } catch (IOException e) {
             e.printStackTrace();
         }

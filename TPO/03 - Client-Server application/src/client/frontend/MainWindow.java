@@ -13,7 +13,7 @@ import zad1.client.backend.Client;
 
 public class MainWindow extends Application {
 
-    public static TextField serverResponseTextField;
+    public static TextField outputTextField;
 
     private GridPane grid = new GridPane();
     private Label wordLabel = new Label("Word: ");
@@ -65,9 +65,9 @@ public class MainWindow extends Application {
         grid.add(wordTextField, 1, 0);
         grid.add(languageCodeTextField, 1, 1);
         grid.add(portTextField, 1, 2);
-        serverResponseTextField = new TextField();
-        serverResponseTextField.setEditable(false);
-        grid.add(serverResponseTextField, 0, 3, 2, 1);
+        outputTextField = new TextField();
+        outputTextField.setEditable(false);
+        grid.add(outputTextField, 0, 3, 2, 1);
     }
 
     private void addButtonsToGrid() {
@@ -77,13 +77,33 @@ public class MainWindow extends Application {
     }
 
     private void setUpButtonsActions() {
-        translateButton.setOnAction(event -> Client.sendTranslationRequest(
-                wordTextField.getText(),
-                languageCodeTextField.getText(),
-                Integer.parseInt(portTextField.getText())
-        ));
+        translateButton.setOnAction(event -> {
+            if (isInputIncorrect()) {
+                outputTextField.setText("Wrong or empty input value!");
+            } else {
+                Client.sendTranslationRequest(
+                        wordTextField.getText(),
+                        languageCodeTextField.getText(),
+                        Integer.parseInt(portTextField.getText())
+                );
+            }
+        });
         quitButton.setOnAction(event -> System.exit(0));
 
+    }
+
+    private boolean isInputIncorrect() {
+        return wordTextField.getText().trim().isEmpty() || languageCodeTextField.getText().trim().isEmpty()
+                || portTextField.getText().trim().isEmpty() || !isNumeric(portTextField.getText().trim());
+    }
+
+    private boolean isNumeric(String string) {
+        try {
+            Double.parseDouble(string);
+        } catch (NumberFormatException | NullPointerException n) {
+            return false;
+        }
+        return true;
     }
 
 }

@@ -16,6 +16,7 @@ public class Client {
                 }
             }).start();
             Socket connectionSocket = new Socket("127.0.0.1", 31337);
+            connectionSocket.setSoTimeout(20000);
             connectionSocket.getOutputStream().write(String.format("%s|%s|%d", word, languageCode, port).getBytes());
             connectionSocket.close();
         } catch (IOException e) {

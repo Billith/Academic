@@ -38,6 +38,7 @@ public class ServerRequestHandler implements Runnable {
     private void sendResponse(int port, String response) throws IOException {
         System.out.println("[Server] Response sent : " + response);
         Socket connectionSocket = new Socket("127.0.0.1", port);
+        connectionSocket.setSoTimeout(20000);
         connectionSocket.getOutputStream().write(response.getBytes());
         connectionSocket.close();
     }
