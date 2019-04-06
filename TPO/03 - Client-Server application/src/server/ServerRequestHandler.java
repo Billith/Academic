@@ -22,7 +22,7 @@ public class ServerRequestHandler implements Runnable {
             String output = Utils.readStringFromStream(respondSocketStream);
             System.out.println("[Server] Got client request : " + output);
             String response = parseRequest(output);
-            sendResponse(1337, response);
+            sendResponse(clientPort, response);
         } catch (IOException e) {
             e.printStackTrace();
         }

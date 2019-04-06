@@ -61,7 +61,7 @@ public class Dictionaries {
             if (languageDictionary.containsKey(word)) {
                 return languageDictionary.get(word);
             } else {
-                return "Word translation not found";
+                return "Translation not found";
             }
         } else {
             return "Language not found";

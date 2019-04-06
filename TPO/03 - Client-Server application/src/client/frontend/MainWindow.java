@@ -1,6 +1,8 @@
 package zad1.client.frontend;
 
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -9,6 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import zad1.client.backend.Client;
 
 public class MainWindow extends Application {
@@ -32,18 +35,12 @@ public class MainWindow extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("TPO 03");
-        primaryStage.setResizable(false);
-
         addLabelsToGrid();
         addTextBoxesToGrid();
         addButtonsToGrid();
         setUpGrid();
         setUpButtonsActions();
-
-        Scene scene = new Scene(grid);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        setUpPrimaryStage(primaryStage);
     }
 
     public static void startUI() {
@@ -76,6 +73,18 @@ public class MainWindow extends Application {
         grid.add(buttons, 0, 4, 2, 1);
     }
 
+    private void setUpPrimaryStage(Stage primaryStage) {
+        primaryStage.setTitle("TPO 03");
+        primaryStage.setResizable(false);
+        primaryStage.setOnCloseRequest(event -> {
+            Platform.exit();
+            System.exit(0);
+        });
+        Scene scene = new Scene(grid);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
     private void setUpButtonsActions() {
         translateButton.setOnAction(event -> {
             if (isInputIncorrect()) {
@@ -94,16 +103,17 @@ public class MainWindow extends Application {
 
     private boolean isInputIncorrect() {
         return wordTextField.getText().trim().isEmpty() || languageCodeTextField.getText().trim().isEmpty()
-                || portTextField.getText().trim().isEmpty() || !isNumeric(portTextField.getText().trim());
+                || portTextField.getText().trim().isEmpty() || !isValidPortNumber(portTextField.getText().trim());
     }
 
-    private boolean isNumeric(String string) {
+    private boolean isValidPortNumber(String port) {
+        double portNumber;
         try {
-            Double.parseDouble(string);
+            portNumber = Double.parseDouble(port);
         } catch (NumberFormatException | NullPointerException n) {
             return false;
         }
-        return true;
+        return portNumber > 0 && portNumber < 65536;
     }
 
 }
