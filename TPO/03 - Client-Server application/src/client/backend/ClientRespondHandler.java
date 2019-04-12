@@ -9,18 +9,18 @@ import java.net.Socket;
 
 public class ClientRespondHandler {
 
-    Socket respondSocket;
+    private Socket respondSocket;
 
     public ClientRespondHandler(Socket respondSocket) {
         this.respondSocket = respondSocket;
         getResponse();
     }
 
-    public void getResponse() {
+    private void getResponse() {
         try {
             InputStream respondSocketStream = this.respondSocket.getInputStream();
             String output = Utils.readStringFromStream(respondSocketStream);
-            System.out.println("[Client] Got server response : " + output);
+            System.out.println("[Client] Got servers response : " + output);
             if(MainWindow.outputTextField != null)
                 MainWindow.outputTextField.setText(output);
         } catch (IOException e) {
