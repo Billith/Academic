@@ -15,8 +15,18 @@ public class DictionaryRouter {
 
     private static Map<String, Integer> dictionariesMap = new Hashtable<>();
 
+    Path dictionaryPath = Paths.get("dicts");
+
     public DictionaryRouter() throws IOException {
-        parseDictionaries();
+        if (Files.exists(dictionaryPath) && Files.isDirectory(dictionaryPath)) {
+            parseDictionaries();
+        } else {
+            System.out.println("[!] No dictionary directory found!");
+            System.out.println("[!] Create \"dicts\" directory and put there dictionary files");
+            System.out.println("    which filenames are language code (eg. \"EN\") and file ");
+            System.out.println("    format is like \"word|translated_word\".");
+            System.out.println("    Every word formatted as below should be in separate line");
+        }
     }
 
     public static Integer getLanguageServerPort(String languageCode) {
@@ -27,8 +37,12 @@ public class DictionaryRouter {
         }
     }
 
+    public static boolean isRouteTableEmpty() {
+        return dictionariesMap.isEmpty();
+    }
+
     private void parseDictionaries() throws IOException {
-        Files.walkFileTree(Paths.get("dicts"), new SimpleFileVisitor<Path>() {
+        Files.walkFileTree(dictionaryPath, new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws FileNotFoundException {
                 int wordCount = parseDictionaryFileAndRunDictionaryServer(file);

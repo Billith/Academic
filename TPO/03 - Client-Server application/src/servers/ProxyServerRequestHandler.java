@@ -42,21 +42,25 @@ public class ProxyServerRequestHandler implements Runnable {
     private void sendRequestToDictionaryServer(String wordToTranslate, String languageCode, int clientPort) throws IOException {
         Integer dictionaryServerPort = DictionaryRouter.getLanguageServerPort(languageCode);
         if (dictionaryServerPort == null) {
-            sendErrorMessageToClient(clientPort);
+            if (DictionaryRouter.isRouteTableEmpty()) {
+                sendErrorMessageToClient(clientPort, "There are no dictionary servers running");
+                return;
+            }
+            sendErrorMessageToClient(clientPort, "Language not found");
             return;
         }
         Socket connectionSocket = new Socket("127.0.0.1", dictionaryServerPort);
         connectionSocket.setSoTimeout(20000);
         connectionSocket.getOutputStream().write((wordToTranslate + "|" + clientPort).getBytes());
         connectionSocket.close();
-        System.out.println("[ProxyServer] Request passed to " + languageCode + " servers on " + dictionaryServerPort + " port");
+        System.out.println("[ProxyServer] Request passed to " + languageCode + " server on " + dictionaryServerPort + " port");
     }
 
-    private void sendErrorMessageToClient(int clientPort) throws IOException {
+    private void sendErrorMessageToClient(int clientPort, String errorMessage) throws IOException {
         Socket connectionSocket = new Socket("127.0.0.1", clientPort);
         connectionSocket.setSoTimeout(20000);
-        connectionSocket.getOutputStream().write("Language not found".getBytes());
+        connectionSocket.getOutputStream().write(errorMessage.getBytes());
         connectionSocket.close();
-        System.out.println("[ProxyServer] Language code not found. Error message sent to client!");
+        System.out.println("[ProxyServer] Error message sent to client: " + errorMessage);
     }
 }

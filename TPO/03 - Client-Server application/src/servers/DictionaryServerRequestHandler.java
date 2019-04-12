@@ -23,7 +23,7 @@ public class DictionaryServerRequestHandler implements Runnable {
         try {
             InputStream respondSocketStream = this.listeningSocket.getInputStream();
             String output = Utils.readStringFromStream(respondSocketStream);
-            System.out.println("[DictServer] Got  request : " + output);
+            System.out.println("[DictServer] Got request : " + output);
             String response = parseRequest(output);
             sendResponse(clientPort, response);
         } catch (IOException e) {
