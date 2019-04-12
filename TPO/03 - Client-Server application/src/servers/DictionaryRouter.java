@@ -15,7 +15,7 @@ public class DictionaryRouter {
 
     private static Map<String, Integer> dictionariesMap = new Hashtable<>();
 
-    Path dictionaryPath = Paths.get("dicts");
+    private Path dictionaryPath = Paths.get("dicts");
 
     public DictionaryRouter() throws IOException {
         if (Files.exists(dictionaryPath) && Files.isDirectory(dictionaryPath)) {
