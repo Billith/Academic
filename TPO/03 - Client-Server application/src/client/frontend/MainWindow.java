@@ -89,9 +89,9 @@ public class MainWindow extends Application {
                 outputTextField.setText("Wrong or empty input value!");
             } else {
                 Client.sendTranslationRequest(
-                        wordTextField.getText(),
-                        languageCodeTextField.getText(),
-                        Integer.parseInt(portTextField.getText())
+                        wordTextField.getText().trim(),
+                        languageCodeTextField.getText().trim(),
+                        Integer.parseInt(portTextField.getText().trim())
                 );
             }
         });

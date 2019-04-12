@@ -27,7 +27,7 @@ public class DictionaryServerRequestHandler implements Runnable {
             String response = parseRequest(output);
             sendResponse(clientPort, response);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("[DictServer] Failed to send response to the client");
         }
     }
 

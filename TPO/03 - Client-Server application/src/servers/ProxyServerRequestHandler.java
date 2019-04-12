@@ -35,7 +35,7 @@ public class ProxyServerRequestHandler implements Runnable {
         try {
             sendRequestToDictionaryServer(wordToTranslate, languageCode, clientPort);
         } catch (IOException e) {
-            e.printStackTrace();
+            sendErrorMessageToClient(clientPort, "Connection to the dictionary server failed");
         }
     }
 
@@ -56,11 +56,15 @@ public class ProxyServerRequestHandler implements Runnable {
         System.out.println("[ProxyServer] Request passed to " + languageCode + " server on " + dictionaryServerPort + " port");
     }
 
-    private void sendErrorMessageToClient(int clientPort, String errorMessage) throws IOException {
-        Socket connectionSocket = new Socket("127.0.0.1", clientPort);
-        connectionSocket.setSoTimeout(20000);
-        connectionSocket.getOutputStream().write(errorMessage.getBytes());
-        connectionSocket.close();
-        System.out.println("[ProxyServer] Error message sent to client: " + errorMessage);
+    private void sendErrorMessageToClient(int clientPort, String errorMessage) {
+        try {
+            Socket connectionSocket = new Socket("127.0.0.1", clientPort);
+            connectionSocket.setSoTimeout(20000);
+            connectionSocket.getOutputStream().write(errorMessage.getBytes());
+            connectionSocket.close();
+            System.out.println("[ProxyServer] Error message sent to client: " + errorMessage);
+        } catch (IOException e) {
+            System.out.println("[Server] Failed to send response to the client");
+        }
     }
 }
