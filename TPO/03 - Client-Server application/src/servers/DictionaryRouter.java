@@ -22,10 +22,10 @@ public class DictionaryRouter {
             parseDictionaries();
         } else {
             System.out.println("[!] No dictionary directory found!");
-            System.out.println("[!] Create \"dicts\" directory and put there dictionary files");
-            System.out.println("    which filenames are language code (eg. \"EN\") and file ");
-            System.out.println("    format is like \"word|translated_word\".");
-            System.out.println("    Every word formatted as below should be in separate line");
+            System.out.println("[!] Create \"dicts\" directory  and put  there dictionary  files  which  filenames");
+            System.out.println("    are language code (eg. \"EN\") and file format is like \"word:translated_word\".");
+            System.out.println("    Every word formatted as above should be in separate line");
+            System.out.println("    ");
         }
     }
 
