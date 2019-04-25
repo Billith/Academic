@@ -8,6 +8,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -23,7 +24,7 @@ public class ClientUI extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        VBox buttons = new VBox();
+        HBox buttons = new HBox();
         buttons.setSpacing(5);
         Button topicButton = new Button("Add topic");
         topicButton.setMinWidth(100);
@@ -32,9 +33,11 @@ public class ClientUI extends Application {
             td.setHeaderText("Enter topic to follow:");
             td.showAndWait();
             String subject = td.getEditor().getText();
-            Tab newTab = new Tab(subject);
-            newTab.setOnCloseRequest(event1 -> System.out.println("[Client] closing tab " + newTab.getText()));
-            tabPane.getTabs().add(newTab);
+            if (subject.trim().length() > 0) {
+                Tab newTab = new Tab(subject.trim());
+                newTab.setOnCloseRequest(event1 -> System.out.println("[Client] closing tab " + newTab.getText()));
+                tabPane.getTabs().add(newTab);
+            }
             tabPane.getTabs().forEach((tab) -> System.out.println("[Client] new tab added: " + tab.getText()));
         });
         Button exitButton = new Button("Exit");
@@ -46,11 +49,11 @@ public class ClientUI extends Application {
         buttons.getChildren().addAll(topicButton, exitButton);
 
         tabPane = new TabPane();
-        tabPane.setPadding(new Insets(0,0,0,10));
+        tabPane.setPadding(new Insets(10,0,0,0));
         tabPane.setMinSize(400,600);
 
         grid.add(buttons,0,0);
-        grid.add(tabPane, 1, 0);
+        grid.add(tabPane, 0, 1);
         grid.setPadding(new Insets(10));
 
         Scene scene = new Scene(grid);

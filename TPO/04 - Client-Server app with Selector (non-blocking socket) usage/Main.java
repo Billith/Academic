@@ -1,6 +1,7 @@
 package zad1;
 
 import zad1.admin.backend.Admin;
+import zad1.client.frontend.ClientUI;
 import zad1.server.Server;
 
 import java.io.IOException;
