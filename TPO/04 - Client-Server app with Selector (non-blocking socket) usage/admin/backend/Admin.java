@@ -4,9 +4,6 @@ import zad1.Utils;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class Admin {
 
@@ -38,12 +35,26 @@ public class Admin {
         }
     }
 
-    public List<String> getTopicsList() throws IOException {
-        String serverAnswer = sendRequestToServer("LST");
-        System.out.printf("[Admin] server answer: %s\n", serverAnswer);
-        List<String> topicsList = new ArrayList<>();
-        Collections.addAll(topicsList, serverAnswer.split("\\|"));
-        return topicsList;
+    public void sendMessage(String topic, String message) {
+        try {
+            String payload = topic + "|" + message;
+            String serverAnswer = sendRequestWithPayloadToServer("MSG", payload);
+            System.out.printf("[Admin] server answer: %s\n", serverAnswer);
+        } catch (IOException e) {
+            System.out.println("[!] failed to send message request");
+            e.printStackTrace();
+        }
+    }
+
+    public String[] getTopicsList() {
+        try {
+            String serverAnswer = sendRequestToServer("LST");
+            System.out.printf("[Admin] server answer: %s\n", serverAnswer);
+            return serverAnswer.split("\\|");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new String[0];
     }
 
     private String sendRequestToServer(String opcode) throws IOException {

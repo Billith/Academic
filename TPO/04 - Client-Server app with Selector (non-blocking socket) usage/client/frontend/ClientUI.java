@@ -9,7 +9,6 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class ClientUI extends Application {
@@ -58,6 +57,8 @@ public class ClientUI extends Application {
 
         Scene scene = new Scene(grid);
         primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
+        primaryStage.setTitle("TPO4 - Client");
         primaryStage.show();
     }
 }

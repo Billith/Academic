@@ -103,9 +103,23 @@ public class Server {
                 connectionChannel.close();
             } else if(opcode.equals("LST")) {
                 sendTopicList(connectionChannel);
+            } else if(opcode.equals("MSG")) {
+                addMessage(value);
+                connectionChannel.write(ByteBuffer.wrap("OK".getBytes()));
+                connectionChannel.close();
             }
         } catch (Exception e) {
             System.out.printf("[Server] failed to parse a request: %s\n", clientMsg);
+        }
+    }
+
+    private void addMessage(String value) {
+        String[] parts = value.split("\\|");
+        String topic = parts[0];
+        String message = parts[1];
+        if (topicsAndMessages.containsKey(topic)) {
+            topicsAndMessages.get(topic).add(message);
+            System.out.printf("[Server] message added to %s topic: %s\n", topic, message);
         }
     }
 
