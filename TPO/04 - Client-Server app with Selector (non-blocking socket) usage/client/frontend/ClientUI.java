@@ -38,20 +38,7 @@ public class ClientUI extends Application {
 
         HBox buttons = new HBox();
         buttons.setSpacing(5);
-//        Button topicButton = new Button("Add topic");
-//        topicButton.setMinWidth(100);
-//        topicButton.setOnAction(event -> {
-//            TextInputDialog td = new TextInputDialog();
-//            td.setHeaderText("Enter topic to follow:");
-//            td.showAndWait();
-//            String subject = td.getEditor().getText();
-//            if (subject.trim().length() > 0) {
-//                Tab newTab = new Tab(subject.trim());
-//                newTab.setOnCloseRequest(event1 -> System.out.println("[Client] closing tab " + newTab.getText()));
-//                tabPane.getTabs().add(newTab);
-//            }
-//            tabPane.getTabs().forEach((tab) -> System.out.println("[Client] new tab added: " + tab.getText()));
-//        });
+
         Button exitButton = new Button("Exit");
         exitButton.setMinWidth(100);
         exitButton.setOnAction(event -> {

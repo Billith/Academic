@@ -57,14 +57,6 @@ public class Admin {
         return new String[0];
     }
 
-    private String sendRequestToServer(String opcode) throws IOException {
-        Socket serverConnection = new Socket(serverHostname, serverPort);
-        serverConnection.getOutputStream().write(String.format("%s", opcode).getBytes());
-        String serverAnswer = Utils.readStringFromStream(serverConnection.getInputStream());
-        serverConnection.close();
-        return serverAnswer;
-    }
-
     private String sendRequestToServer(String opcode, String broker, String regex) throws IOException {
         Socket serverConnection = new Socket(serverHostname, serverPort);
         serverConnection.getOutputStream().write(String.format("%s", opcode).getBytes());
