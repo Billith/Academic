@@ -48,8 +48,7 @@ public class ClientUI extends Application {
         buttons.getChildren().addAll(exitButton);
 
         tabPane = new TabPane();
-        tabPane.setPadding(new Insets(10,0,0,0));
-        tabPane.setMinSize(400,600);
+        tabPane.setMinSize(400,400);
 
         ListView<String> topicListView = new ListView<>();
         topicListView.setItems(topicsList);
@@ -72,7 +71,7 @@ public class ClientUI extends Application {
 
         grid.add(buttons,0,1);
         grid.add(tabPane, 0, 0);
-        grid.setPadding(new Insets(10));
+        grid.setPadding(new Insets(10, 10, 10, 10));
 
         runTopicsProbeThread();
 
@@ -89,7 +88,7 @@ public class ClientUI extends Application {
                 System.out.println("[Client] Probing server for topics");
                 client.getTopicsList();
                 try {
-                    Thread.currentThread().sleep(5000);
+                    Thread.currentThread().sleep(2500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
