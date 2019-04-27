@@ -6,10 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -18,6 +15,8 @@ import zad1.admin.backend.Admin;
 public class AdminUI extends Application {
 
     private Admin admin = new Admin("127.0.0.1", 9001);
+
+    private GridPane grid = new GridPane();
     private ObservableList<String> topics;
 
     public static void startUI() {
@@ -27,14 +26,12 @@ public class AdminUI extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        GridPane grid = new GridPane();
-
         TextArea ta = new TextArea();
-        ta.setMinSize(300,250);
         grid.add(ta, 0, 0, 1, 2);
 
         topics = FXCollections.observableArrayList(admin.getTopicsList());
         ListView<String> lw = new ListView<>();
+        lw.setPrefWidth(175);
         lw.setItems(topics);
         grid.add(lw, 1,0);
 
@@ -42,7 +39,7 @@ public class AdminUI extends Application {
 
         buttons.setAlignment(Pos.CENTER);
         buttons.setSpacing(3);
-        buttons.setPadding(new Insets(5, 0, 5, 0));
+        buttons.setPadding(new Insets(5, 0, 0, 0));
 
         Button addTopicButton = new Button("Add topic");
         addTopicButton.setOnAction(event -> {
@@ -53,7 +50,7 @@ public class AdminUI extends Application {
             admin.addTopic(newTopic);
             topics.setAll(admin.getTopicsList());
         });
-        addTopicButton.setPrefWidth(150);
+        addTopicButton.setPrefWidth(125);
 
         Button removeTopicButton = new Button("Remove topic");
         removeTopicButton.setOnAction(event -> {
@@ -61,24 +58,31 @@ public class AdminUI extends Application {
             admin.removeTopic(selectedTopic);
             topics.setAll(admin.getTopicsList());
         });
-        removeTopicButton.setPrefWidth(150);
+        removeTopicButton.setPrefWidth(125);
 
         Button sendMessageButton = new Button("Send message");
         sendMessageButton.setOnAction(event -> {
             String selectedTopic = lw.getSelectionModel().getSelectedItem();
-            String message = ta.getText();
-            admin.sendMessage(selectedTopic, message);
-            ta.setText("");
+            if (selectedTopic != null) {
+                String message = ta.getText().replace('|', ' ');
+                admin.sendMessage(selectedTopic, message);
+                ta.setText("");
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText("Musisz zaznaczyć któryś z tematów przed wysłaniem odpowiedzi!");
+                alert.showAndWait();
+            }
         });
-        sendMessageButton.setPrefWidth(150);
+        sendMessageButton.setPrefWidth(125);
 
         Button exitButton = new Button("Exit");
         exitButton.setOnAction(event -> primaryStage.close());
-        exitButton.setPrefWidth(150);
+        exitButton.setPrefWidth(125);
 
         buttons.getChildren().addAll(addTopicButton, removeTopicButton, sendMessageButton, exitButton);
         grid.add(buttons, 1, 1);
 
+        grid.setPadding(new Insets(5));
         Scene scene = new Scene(grid);
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);

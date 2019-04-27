@@ -48,9 +48,9 @@ public class Admin {
 
     public String[] getTopicsList() {
         try {
-            String serverAnswer = sendRequestToServer("LST");
+            String serverAnswer = sendRequestToServer("LST", "||", "\\|\1{2}");
             System.out.printf("[Admin] server answer: %s\n", serverAnswer);
-            return serverAnswer.split("\\|");
+            return serverAnswer.substring(4).split("\\|");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -61,6 +61,14 @@ public class Admin {
         Socket serverConnection = new Socket(serverHostname, serverPort);
         serverConnection.getOutputStream().write(String.format("%s", opcode).getBytes());
         String serverAnswer = Utils.readStringFromStream(serverConnection.getInputStream());
+        serverConnection.close();
+        return serverAnswer;
+    }
+
+    private String sendRequestToServer(String opcode, String broker, String regex) throws IOException {
+        Socket serverConnection = new Socket(serverHostname, serverPort);
+        serverConnection.getOutputStream().write(String.format("%s", opcode).getBytes());
+        String serverAnswer = Utils.readStringFromStreamUntil(serverConnection.getInputStream(), broker, regex);
         serverConnection.close();
         return serverAnswer;
     }

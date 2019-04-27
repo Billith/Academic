@@ -4,6 +4,7 @@ import zad1.Utils;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
@@ -16,7 +17,7 @@ public class Server {
     private ServerSocketChannel serverSocketChannel;
     private Selector selector;
     private Map<String, List<String>> topicsAndMessages = new HashMap<>();
-    private Map<SocketChannel, List<String>> clientsConnections = new HashMap<>();
+    private Map<SocketChannel, List<String>> clientsConnectionsWithSubscribedTopics = new HashMap<>();
 
 
     public Server() {
@@ -73,16 +74,12 @@ public class Server {
     private void requestHandler(SelectionKey key) {
         SocketChannel connectionChannel = (SocketChannel) key.channel();
 
-        try {
-            String clientMsg = Utils.readStringFromChannel(connectionChannel).trim();
-            if(clientMsg.equals("")) {
-                return;
-            }
-            System.out.printf("[Server] %s\n", clientMsg);
-            parseRequest(clientMsg, connectionChannel);
-        } catch (IOException e) {
-            e.printStackTrace();
+        String clientMsg = Utils.readStringFromChannel(connectionChannel).trim();
+        if(clientMsg.equals("")) {
+            return;
         }
+        System.out.printf("[Server] %s\n", clientMsg);
+        parseRequest(clientMsg, connectionChannel);
     }
 
     private void parseRequest(String clientMsg, SocketChannel connectionChannel) {
@@ -90,9 +87,9 @@ public class Server {
             String opcode = clientMsg.substring(0, 3);
             String value = (clientMsg.length() > 3) ? clientMsg.substring(4) : "";
             if(opcode.equals("SUB")) {
-                subscribeClientToMsgChannel(value, connectionChannel);
+                subscribeClientToTopic(value, connectionChannel);
             } else if(opcode.equals("UNS")) {
-                unsubscribeClientFromMsgChannel(value, connectionChannel);
+                unsubscribeClientFromTopic(value, connectionChannel);
             } else if(opcode.equals("ADD")) {
                 addTopic(value);
                 connectionChannel.write(ByteBuffer.wrap("OK".getBytes()));
@@ -119,18 +116,37 @@ public class Server {
         String message = parts[1];
         if (topicsAndMessages.containsKey(topic)) {
             topicsAndMessages.get(topic).add(message);
+            pushMessageToClients(topic, message);
             System.out.printf("[Server] message added to %s topic: %s\n", topic, message);
         }
     }
 
+    private void pushMessageToClients(String topic, String message) {
+        for (SocketChannel sc : clientsConnectionsWithSubscribedTopics.keySet()) {
+            List<String> subscribedTopics = clientsConnectionsWithSubscribedTopics.get(sc);
+            if (subscribedTopics.contains(topic)) {
+                sendMessageTo(sc, topic, message);
+            }
+        }
+    }
+
+    private void sendMessageTo(SocketChannel sc, String topic, String message) {
+        String messagePacket = "MSG|" + topic + "|" + message + "||";
+        try {
+            sc.write(ByteBuffer.wrap(messagePacket.getBytes()));
+        } catch (IOException e) {
+            System.out.println("[Server] message push failed!");
+        }
+    }
+
     private void sendTopicList(SocketChannel connectionChannel) {
-        String topicsList = "";
+        String topicsList = "LST|";
         for (String topic : topicsAndMessages.keySet()) {
             topicsList += topic + "|" ;
         }
+        topicsList += "||";
         try {
             connectionChannel.write(ByteBuffer.wrap(topicsList.getBytes()));
-            connectionChannel.close();
         } catch (IOException e) {
             System.out.println("[Server] failed to send topics list!");
         }
@@ -148,29 +164,40 @@ public class Server {
         }
     }
 
-    private void subscribeClientToMsgChannel(String value, SocketChannel connectionChannel) {
+    private void subscribeClientToTopic(String topic, SocketChannel connectionChannel) {
         try {
-            connectionChannel.write(ByteBuffer.wrap(("[+] successfully subscribed to " + value).getBytes()));
-            if (clientsConnections.containsKey(connectionChannel)) {
-                if (!clientsConnections.get(connectionChannel).contains(value)) {
-                    clientsConnections.get(connectionChannel).add(value);
+            if (topicsAndMessages.containsKey(topic)) {
+                if (clientsConnectionsWithSubscribedTopics.containsKey(connectionChannel)) {
+                    if (!clientsConnectionsWithSubscribedTopics.get(connectionChannel).contains(topic)) {
+                        clientsConnectionsWithSubscribedTopics.get(connectionChannel).add(topic);
+                    }
+                } else {
+                    List<String> subscribedTopics = new ArrayList<>();
+                    subscribedTopics.add(topic);
+                    clientsConnectionsWithSubscribedTopics.put(connectionChannel, subscribedTopics);
                 }
+                System.out.print("[Server] all topics which client subscribes: ");
+                for (String topicName : clientsConnectionsWithSubscribedTopics.get(connectionChannel))
+                    System.out.print(topicName + " ");
+                System.out.println();
             } else {
-                List<String> subscribedTopics = new ArrayList<>();
-                subscribedTopics.add(value);
-                clientsConnections.put(connectionChannel, subscribedTopics);
+                connectionChannel.write(ByteBuffer.wrap(("ERR|Podany temat nie istnieje!||").getBytes()));
             }
         } catch (IOException e) {
             System.out.println("[Server] failed to send msg to client");
         }
     }
 
-    private void unsubscribeClientFromMsgChannel(String value, SocketChannel connectionChannel) {
-        try {
-            connectionChannel.write(ByteBuffer.wrap(("[+] successfully unsubscribed to " + value).getBytes()));
-        } catch (IOException e) {
-            System.out.println("[Server] failed to send msg to client");
+    private void unsubscribeClientFromTopic(String value, SocketChannel connectionChannel) {
+        if (clientsConnectionsWithSubscribedTopics.containsKey(connectionChannel)) {
+            if (clientsConnectionsWithSubscribedTopics.get(connectionChannel).contains(value)) {
+                clientsConnectionsWithSubscribedTopics.get(connectionChannel).remove(value);
+            }
         }
+        System.out.print("[Server] all topics which client subscribes: ");
+        for (String topicName : clientsConnectionsWithSubscribedTopics.get(connectionChannel))
+            System.out.print(topicName + " ");
+        System.out.println();
     }
 
 }
