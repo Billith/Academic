@@ -17,7 +17,7 @@ public class Admin {
 
     public void addTopic(String topic) {
         try {
-            String serverAnswer = sendRequestWithPayloadToServer("ADD", topic);
+            String serverAnswer = sendRequestWithPayloadToServer("ADD", topic.replace('|', ' '));
             System.out.printf("[Admin] server answer: %s\n", serverAnswer);
         } catch (IOException e) {
             System.out.println("[!] failed to send add request");
