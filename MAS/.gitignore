@@ -1,0 +1,6 @@
+**/*.bin
+**/*.iml
+**/out
+**/.idea
+**/system_data.bin
+**/target
