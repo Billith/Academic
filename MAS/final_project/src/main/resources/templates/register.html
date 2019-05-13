@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Iluzjon Cinema</title>
+</head>
+<body>
+<div th:replace="fragments/menu :: menu"></div>
+    <h1>Register</h1>
+    <form th:action="@{/register}" th:object="${user}">
+        <input th:field="*{username}" type="text" placeholder="Username">
+        <input th:field="*{email}" type="text" placeholder="Email">
+        <input th:field="*{password}" type="password" placeholder="Password">
+        <input th:field="*{matchingPassword}" type="password" placeholder="Repeat password">
+        <label><input type="checkbox">I accept terms of use</label>
+        <input type="submit" value="Register">
+    </form>
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>
