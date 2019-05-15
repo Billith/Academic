@@ -1,3 +1,9 @@
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 public class Main {
 
     public static void main(String[] args) throws Exception {
@@ -10,15 +16,31 @@ public class Main {
         EventTicket ticket2 = new EventTicket("normalny", 40d);
 
         emp.sellEventTicket(ticket1);
-        emp1.sellEventTicket(ticket1);
-        emp.sellEventTicket(ticket2);
+        emp1.sellEventTicket(ticket2);
 
-        emp.showLinks("sprzedaje", System.out);
-        emp1.showLinks("sprzedaje", System.out);
-        ticket1.showLinks("sprzedany", System.out);
-        //ticket2.showLinks("sprzedany", System.out);
+        emp.printSoldTickets();
+        emp1.printSoldTickets();
+
+        System.out.println();
 
         // Z atrybutem
+        ScreeningRoom room1 = new ScreeningRoom(1, 50, ScreeningRoom.ScreeningRoomType.TWO_D);
+        SocialEvent event1 = new SocialEvent("event1", "organizer", new URL("http://event1.com"));
+        SocialEvent event2 = new SocialEvent("event2", "organizer", new URL("http://event2.com"));
+
+        event1.reserveScreeningRoom(
+                room1,
+                LocalDateTime.of(2019, 05, 15, 12, 30),
+                LocalDateTime.of(2019, 05, 15, 14, 30)
+        );
+
+        event2.reserveScreeningRoom(
+                room1,
+                LocalDateTime.of(2019, 05, 16, 12, 30),
+                LocalDateTime.of(2019, 05, 16, 14, 30)
+        );
+
+        room1.printAllReservations();
 
 
     }
