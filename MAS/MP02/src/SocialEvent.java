@@ -9,7 +9,7 @@ public class SocialEvent extends Event {
     String organizer;
     URL eventUrl;
 
-    List<ScreeningRoomReservation> allScreeningRoomReservations = new ArrayList<>();
+    List<CinemaRoomReservation> allCinemaRoomReservations = new ArrayList<>();
 
     public SocialEvent(String name, String organizer, URL eventUrl) {
         this.name = name;
@@ -17,13 +17,39 @@ public class SocialEvent extends Event {
         this.eventUrl = eventUrl;
     }
 
-    public void reserveScreeningRoom(ScreeningRoom screeningRoom, LocalDateTime reservationStart, LocalDateTime reservationEnd) throws Exception {
-        for(ScreeningRoomReservation reservation : screeningRoom.allScreeningRoomReservations) {
-            if(reservation.reservedScreeningRoom == screeningRoom && reservation.isOverlapping(reservationStart, reservationEnd))
+    public void reserveScreeningRoom(CinemaRoom cinemaRoom, LocalDateTime reservationStart, LocalDateTime reservationEnd) throws Exception {
+
+        if(reservationStart.isAfter(reservationEnd))
+            throw new Exception("[!] end cannot be earlier then start!");
+
+        for(CinemaRoomReservation reservation : cinemaRoom.allCinemaRoomReservations) {
+            if (reservation.isOverlapping(reservationStart, reservationEnd))
                 throw new Exception("[!] Reservation is overlapping with another reservation!");
+
+            if (reservation.isEqual(reservationStart, reservationEnd)) {
+                if(reservation.reservedCinemaRoom == cinemaRoom) {
+                    throw new Exception("[!] Reservation for this room at that start and end time exists!");
+                }
+                reservation.setScreeningRoom(cinemaRoom);
+                return;
+            }
         }
 
-        ScreeningRoomReservation newReservation = new ScreeningRoomReservation(reservationStart, reservationEnd, screeningRoom, this);
+        for(CinemaRoomReservation reservation : allCinemaRoomReservations) {
+            if (reservation.isEqual(reservationStart, reservationEnd)) {
+                reservation.setScreeningRoom(cinemaRoom);
+                return;
+            }
+        }
+
+        CinemaRoomReservation newReservation = new CinemaRoomReservation(reservationStart, reservationEnd, cinemaRoom, this);
+    }
+
+    public void printAllReservations() {
+        for(CinemaRoomReservation reservation : allCinemaRoomReservations) {
+            System.out.println(reservation);
+        }
+        System.out.println("------------------------------------");
     }
 
 }
