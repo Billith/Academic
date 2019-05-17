@@ -32,7 +32,7 @@ public class CinemaRoomReservation {
         return start.isEqual(reservationStartDate) && end.isEqual(reservationEndDate);
     }
 
-    public void setScreeningRoom(CinemaRoom cinemaRoom) {
+    public void setCinemaRoom(CinemaRoom cinemaRoom) {
         if(reservedCinemaRoom != null) {
             reservedCinemaRoom.allCinemaRoomReservations.remove(this);
         }

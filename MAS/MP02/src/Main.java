@@ -24,12 +24,12 @@ public class Main {
         CinemaRoom room2 = new CinemaRoom(2, 75, CinemaRoom.ScreeningRoomType.TWO_D);
         SocialEvent event = new SocialEvent("event1", "organizer", new URL("http://event1.com"));
 
-        event.reserveScreeningRoom(
+        event.reserveCinemaRoom(
                 room1,
                 LocalDateTime.of(2019, 05, 15, 12, 30),
                 LocalDateTime.of(2019, 05, 15, 14, 30)
         );
-        event.reserveScreeningRoom(
+        event.reserveCinemaRoom(
                 room2,
                 LocalDateTime.of(2019, 06, 15, 12, 30),
                 LocalDateTime.of(2019, 06, 15, 14, 30)

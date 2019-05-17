@@ -17,7 +17,7 @@ public class SocialEvent extends Event {
         this.eventUrl = eventUrl;
     }
 
-    public void reserveScreeningRoom(CinemaRoom cinemaRoom, LocalDateTime reservationStart, LocalDateTime reservationEnd) throws Exception {
+    public void reserveCinemaRoom(CinemaRoom cinemaRoom, LocalDateTime reservationStart, LocalDateTime reservationEnd) throws Exception {
 
         if(reservationStart.isAfter(reservationEnd))
             throw new Exception("[!] end cannot be earlier then start!");
@@ -30,14 +30,14 @@ public class SocialEvent extends Event {
                 if(reservation.reservedCinemaRoom == cinemaRoom) {
                     throw new Exception("[!] Reservation for this room at that start and end time exists!");
                 }
-                reservation.setScreeningRoom(cinemaRoom);
+                reservation.setCinemaRoom(cinemaRoom);
                 return;
             }
         }
 
         for(CinemaRoomReservation reservation : allCinemaRoomReservations) {
             if (reservation.isEqual(reservationStart, reservationEnd)) {
-                reservation.setScreeningRoom(cinemaRoom);
+                reservation.setCinemaRoom(cinemaRoom);
                 return;
             }
         }
