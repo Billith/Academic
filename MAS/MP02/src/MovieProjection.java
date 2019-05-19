@@ -18,13 +18,13 @@ public class MovieProjection {
     }
 
     public void addEventTicket(EventTicket ticket) {
-        if(!ticketMap.containsKey(ticket.serialNumber)) {
-            ticketMap.put(ticket.serialNumber, ticket);
+        if(!ticketMap.containsKey(ticket.ticketNumber)) {
+            ticketMap.put(ticket.ticketNumber, ticket);
             ticket.addMovieProjection(this);
         }
     }
 
-    public EventTicket findEventTicketBySerialNumber(int serialNumber) throws Exception {
+    public EventTicket findEventTicketByTicketNumber(int serialNumber) throws Exception {
         if(!ticketMap.containsKey(serialNumber)) {
             throw new Exception(String.format("[!] Unable to find a ticket with %s serial number", serialNumber));
         }

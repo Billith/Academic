@@ -56,7 +56,7 @@ public class Main {
 
         movie2.addEventTicket(ticket6);
 
-        EventTicket ticketFound = movie1.findEventTicketBySerialNumber(3);
+        EventTicket ticketFound = movie1.findEventTicketByTicketNumber(3);
         System.out.println("ticketFound:\n" + ticketFound); System.out.println("------------------------------------\n");
 
         // Kompozycja (1 do *)

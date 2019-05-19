@@ -2,14 +2,14 @@ public class EventTicket {
 
     static int numberOfSoldTickets = 1;
 
-    int serialNumber;
+    int ticketNumber;
     String ticketType;
     double price;
     Employee seller;
     MovieProjection movie;
 
     public EventTicket(String ticketType, double price) {
-        this.serialNumber = numberOfSoldTickets;
+        this.ticketNumber = numberOfSoldTickets;
         this.ticketType = ticketType;
         this.price = price;
         numberOfSoldTickets++;
@@ -27,12 +27,12 @@ public class EventTicket {
     }
 
     public String toString() {
-        return String.format("[ %s, serialNo=%s, type=%s, price=%s, seller=%s ]", EventTicket.class.toString().replace(" ", "="), serialNumber, ticketType, price, seller);
+        return String.format("[ %s, serialNo=%s, type=%s, price=%s, seller=%s ]", EventTicket.class.toString().replace(" ", "="), ticketNumber, ticketType, price, seller);
     }
 
     public void addMovieProjection(MovieProjection newMovieProjection) {
         if(movie != null) {
-            movie.ticketMap.remove(this.serialNumber);
+            movie.ticketMap.remove(this.ticketNumber);
         }
         movie = newMovieProjection;
     }
