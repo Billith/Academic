@@ -1,12 +1,12 @@
 public class EventTicket {
 
-    static int numberOfSoldTickets = 1;
+    private static int numberOfSoldTickets = 1;
 
-    int ticketNumber;
-    String ticketType;
-    double price;
-    Employee seller;
-    MovieProjection movie;
+    private int ticketNumber;
+    private String ticketType;
+    private double price;
+    private Employee seller;
+    private MovieProjection movie;
 
     public EventTicket(String ticketType, double price) {
         this.ticketNumber = numberOfSoldTickets;
@@ -17,7 +17,7 @@ public class EventTicket {
 
     public void setSeller(Employee emp) {
         if(seller != null) {
-            emp.soldEventTickets.remove(this);
+            emp.removeEventTicket(this);
         }
         seller = emp;
     }
@@ -26,13 +26,17 @@ public class EventTicket {
         return seller;
     }
 
+    public int getTicketNumber() {
+        return ticketNumber;
+    }
+
     public String toString() {
         return String.format("[ %s, serialNo=%s, type=%s, price=%s, seller=%s ]", EventTicket.class.toString().replace(" ", "="), ticketNumber, ticketType, price, seller);
     }
 
     public void addMovieProjection(MovieProjection newMovieProjection) {
         if(movie != null) {
-            movie.ticketMap.remove(this.ticketNumber);
+            movie.removeEventTicket(this);
         }
         movie = newMovieProjection;
     }

@@ -5,14 +5,14 @@ import java.util.Set;
 
 public class CinemaRoom extends ObjectPlus {
 
-    int screeningRoomPhysicalId;
-    int maximumCapacity;
-    ScreeningRoomType screeningRoomType;
+    private int screeningRoomPhysicalId;
+    private int maximumCapacity;
+    private ScreeningRoomType screeningRoomType;
 
-    List<CinemaRoomReservation> allCinemaRoomReservations = new ArrayList<>();
+    private List<CinemaRoomReservation> allCinemaRoomReservations = new ArrayList<>();
 
-    List<CinemaRoomSeat> seats = new ArrayList<>();
-    static Set<CinemaRoomSeat> allSeats = new HashSet<>();
+    private List<CinemaRoomSeat> seats = new ArrayList<>();
+    private static Set<CinemaRoomSeat> allSeats = new HashSet<>();
 
     public CinemaRoom(int screeningRoomPhysicalId, int maximumCapacity, ScreeningRoomType screeningRoomType) {
         this.screeningRoomPhysicalId = screeningRoomPhysicalId;
@@ -60,6 +60,18 @@ public class CinemaRoom extends ObjectPlus {
             ObjectPlus.removeObjectFromExtent(seat);
         }
         ObjectPlus.removeObjectFromExtent(room);
+    }
+
+    public List<CinemaRoomReservation> getAllCinemaRoomReservations() {
+        return allCinemaRoomReservations;
+    }
+
+    public void addCinemaRoomReservation(CinemaRoomReservation cinemaRoomReservation) {
+        allCinemaRoomReservations.add(cinemaRoomReservation);
+    }
+
+    public void removeCinemaRoomReservation(CinemaRoomReservation cinemaRoomReservation) {
+        allCinemaRoomReservations.remove(cinemaRoomReservation);
     }
 
     public enum ScreeningRoomType {

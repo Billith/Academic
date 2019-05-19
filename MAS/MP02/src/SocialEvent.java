@@ -5,11 +5,11 @@ import java.util.List;
 
 public class SocialEvent extends Event {
 
-    String name;
-    String organizer;
-    URL eventUrl;
+    private String name;
+    private String organizer;
+    private URL eventUrl;
 
-    List<CinemaRoomReservation> allCinemaRoomReservations = new ArrayList<>();
+    private List<CinemaRoomReservation> allCinemaRoomReservations = new ArrayList<>();
 
     public SocialEvent(String name, String organizer, URL eventUrl) {
         this.name = name;
@@ -22,7 +22,7 @@ public class SocialEvent extends Event {
         if(reservationStart.isAfter(reservationEnd))
             throw new Exception("[!] end cannot be earlier then start!");
 
-        for(CinemaRoomReservation reservation : cinemaRoom.allCinemaRoomReservations) {
+        for(CinemaRoomReservation reservation : cinemaRoom.getAllCinemaRoomReservations()) {
             if (reservation.isOverlapping(reservationStart, reservationEnd))
                 throw new Exception("[!] Reservation is overlapping with another reservation!");
 
@@ -52,4 +52,9 @@ public class SocialEvent extends Event {
         System.out.println("------------------------------------");
     }
 
+    public void addEventReservation(CinemaRoomReservation cinemaRoomReservation) {
+        if(allCinemaRoomReservations.contains(cinemaRoomReservation)) {
+            allCinemaRoomReservations.remove(cinemaRoomReservation);
+        }
+    }
 }

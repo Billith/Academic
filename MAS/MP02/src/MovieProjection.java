@@ -3,12 +3,12 @@ import java.util.TreeMap;
 
 public class MovieProjection {
 
-    String title;
-    String director;
-    String country;
-    int duration;
+    private String title;
+    private String director;
+    private String country;
+    private int duration;
 
-    Map<Integer, EventTicket> ticketMap = new TreeMap<>();
+    private Map<Integer, EventTicket> ticketMap = new TreeMap<>();
 
     public MovieProjection(String title, String director, String country, int duration) {
         this.title = title;
@@ -18,13 +18,19 @@ public class MovieProjection {
     }
 
     public void addEventTicket(EventTicket ticket) {
-        if(!ticketMap.containsKey(ticket.ticketNumber)) {
-            ticketMap.put(ticket.ticketNumber, ticket);
+        if(!ticketMap.containsKey(ticket.getTicketNumber())) {
+            ticketMap.put(ticket.getTicketNumber(), ticket);
             ticket.addMovieProjection(this);
         }
     }
 
-    public EventTicket findEventTicketByTicketNumber(int serialNumber) throws Exception {
+    public void removeEventTicket(EventTicket ticket) {
+        if(ticketMap.containsKey(ticket.getTicketNumber())) {
+            ticketMap.remove(ticket.getTicketNumber());
+        }
+    }
+
+    public EventTicket findEventTicket(int serialNumber) throws Exception {
         if(!ticketMap.containsKey(serialNumber)) {
             throw new Exception(String.format("[!] Unable to find a ticket with %s serial number", serialNumber));
         }

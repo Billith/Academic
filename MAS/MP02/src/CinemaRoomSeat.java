@@ -1,5 +1,5 @@
 public class CinemaRoomSeat extends ObjectPlus {
-    int seatNo;
+    private int seatNo;
     private CinemaRoom room;
 
     private CinemaRoomSeat(int seatNo, CinemaRoom room) {

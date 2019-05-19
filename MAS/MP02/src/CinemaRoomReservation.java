@@ -15,17 +15,13 @@ public class CinemaRoomReservation {
         this.reservedCinemaRoom = reservedCinemaRoom;
         this.socialEvent = socialEvent;
 
-        reservedCinemaRoom.allCinemaRoomReservations.add(this);
-        socialEvent.allCinemaRoomReservations.add(this);
+        reservedCinemaRoom.addCinemaRoomReservation(this);
+        socialEvent.addEventReservation(this);
     }
 
     public boolean isOverlapping(LocalDateTime start, LocalDateTime end) {
-        if((start.isAfter(reservationStartDate) && start.isBefore(reservationEndDate)) ||
-           (end.isAfter(reservationStartDate) && end.isBefore(reservationEndDate))
-        ) {
-            return true;
-        }
-        return false;
+        return ((start.isAfter(reservationStartDate) && start.isBefore(reservationEndDate)) ||
+           (end.isAfter(reservationStartDate) && end.isBefore(reservationEndDate))) ? true : false;
     }
 
     public boolean isEqual(LocalDateTime start, LocalDateTime end) {
@@ -34,10 +30,10 @@ public class CinemaRoomReservation {
 
     public void setCinemaRoom(CinemaRoom cinemaRoom) {
         if(reservedCinemaRoom != null) {
-            reservedCinemaRoom.allCinemaRoomReservations.remove(this);
+            reservedCinemaRoom.removeCinemaRoomReservation(this);
         }
         reservedCinemaRoom = cinemaRoom;
-        cinemaRoom.allCinemaRoomReservations.add(this);
+        cinemaRoom.addCinemaRoomReservation(this);
     }
 
     public String toString() {
