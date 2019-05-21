@@ -3,11 +3,11 @@ import java.util.List;
 
 public class Employee  {
 
-    String firstName;
-    String lastName;
-    String pesel;
+    private String firstName;
+    private String lastName;
+    private String pesel;
 
-    List<EventTicket> soldEventTickets = new ArrayList<>();
+    private List<EventTicket> soldEventTickets = new ArrayList<>();
 
     public Employee(String firstName, String lastName, String pesel) {
         this.firstName = firstName;
@@ -15,7 +15,7 @@ public class Employee  {
         this.pesel = pesel;
     }
 
-    public void sellEventTicket(EventTicket ticket) {
+    public void addEventTicket(EventTicket ticket) {
         if(!soldEventTickets.contains(ticket)) {
             Employee ticketSeller = ticket.getSeller();
 
@@ -25,6 +25,12 @@ public class Employee  {
 
             ticket.setSeller(this);
             soldEventTickets.add(ticket);
+        }
+    }
+
+    public void removeEventTicket(EventTicket ticket) {
+        if(soldEventTickets.contains(ticket)) {
+           soldEventTickets.remove(ticket);
         }
     }
 
