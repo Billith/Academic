@@ -1,5 +1,7 @@
 package abstract_class;
 
+import o_plus_plus.ObjectPlus;
+
 public class CinemaRoom extends ObjectPlus {
 
     private boolean supportsTwoD;

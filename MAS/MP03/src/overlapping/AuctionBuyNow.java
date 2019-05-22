@@ -1,5 +1,7 @@
 package overlapping;
 
+import o_plus_plus.ObjectPlusPlus;
+
 import java.math.BigDecimal;
 
 public class AuctionBuyNow extends ObjectPlusPlus {

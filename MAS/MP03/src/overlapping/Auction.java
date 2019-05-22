@@ -1,5 +1,7 @@
 package overlapping;
 
+import o_plus_plus.ObjectPlusPlus;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -12,12 +14,14 @@ public class Auction extends ObjectPlusPlus {
     private String title;
     private LocalDateTime expirationTime;
     private int quantity;
+    private boolean isActive;
 
-    public Auction(String title, LocalDateTime expirationTime, int quantity) {
+    public Auction(String title, LocalDateTime expirationTime, int quantity, BigDecimal startingPrice, BigDecimal minimalBidDifference, BigDecimal buyOutPrice) {
         super();
         this.title = title;
         this.expirationTime = expirationTime;
         this.quantity = quantity;
+        this.isActive = true;
     }
 
     public Auction(String title, LocalDateTime expirationTime, int quantity, BigDecimal startingPrice, BigDecimal minimalBidDifference) {
@@ -36,6 +40,10 @@ public class Auction extends ObjectPlusPlus {
         addAuctionBuyNow(buyOutPrice);
     }
 
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
     private void addAuctionBidding(BigDecimal startingPrice, BigDecimal minimalBidDifference) {
         AuctionBidding auction = new AuctionBidding(startingPrice, minimalBidDifference);
         this.addLink(roleNameBidding, roleNameGeneralization, auction);
@@ -44,6 +52,25 @@ public class Auction extends ObjectPlusPlus {
     private void addAuctionBuyNow(BigDecimal buyOutPrice) {
         AuctionBuyNow auction = new AuctionBuyNow(buyOutPrice);
         this.addLink(roleNameBuyNow, roleNameGeneralization, auction);
+    }
+
+    public void bidInAnAuction(BigDecimal newBid) throws Exception {
+        try {
+            ObjectPlusPlus[] obj = this.getLinks(roleNameBidding);
+            boolean res = ((AuctionBidding)obj[0]).bidInAnAuction(newBid);
+            this.setActive(!res);
+        } catch (Exception e) {
+            throw new Exception("Tried call bidInAnAuction function on non biding auction object");
+        }
+    }
+
+    public void buyOutAuction() throws Exception {
+        try {
+            ObjectPlusPlus[] obj = this.getLinks(roleNameBuyNow);
+            this.setActive(false);
+        } catch (Exception e) {
+            throw new Exception("Tried call bidInAnAuction function on non biding auction object");
+        }
     }
 
 }

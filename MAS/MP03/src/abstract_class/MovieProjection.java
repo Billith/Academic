@@ -1,5 +1,7 @@
 package abstract_class;
 
+import o_plus_plus.ObjectPlus;
+
 import java.util.List;
 
 public abstract class MovieProjection extends ObjectPlus {
