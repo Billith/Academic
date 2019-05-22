@@ -22,6 +22,8 @@ public class Auction extends ObjectPlusPlus {
         this.expirationTime = expirationTime;
         this.quantity = quantity;
         this.isActive = true;
+        addAuctionBidding(startingPrice, minimalBidDifference);
+        addAuctionBuyNow(buyOutPrice);
     }
 
     public Auction(String title, LocalDateTime expirationTime, int quantity, BigDecimal startingPrice, BigDecimal minimalBidDifference) {
@@ -60,6 +62,7 @@ public class Auction extends ObjectPlusPlus {
             boolean res = ((AuctionBidding)obj[0]).bidInAnAuction(newBid);
             this.setActive(!res);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new Exception("Tried call bidInAnAuction function on non biding auction object");
         }
     }
@@ -69,7 +72,7 @@ public class Auction extends ObjectPlusPlus {
             ObjectPlusPlus[] obj = this.getLinks(roleNameBuyNow);
             this.setActive(false);
         } catch (Exception e) {
-            throw new Exception("Tried call bidInAnAuction function on non biding auction object");
+            throw new Exception("Tried call buyOutAuction function on non buyout auction object");
         }
     }
 

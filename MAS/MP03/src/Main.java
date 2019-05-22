@@ -2,6 +2,7 @@ import abstract_class.CinemaRoom;
 import abstract_class.MovieProjection;
 import abstract_class.MovieProjectionThreeD;
 import abstract_class.MovieProjectionTwoD;
+import multi_inheritance.Copier;
 import overlapping.Auction;
 
 import java.math.BigDecimal;
@@ -11,7 +12,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
-        // Klasa abstr/ polimorfizm
+        // Klasa abstr/polimorfizm
         CinemaRoom room1 = new CinemaRoom(true, false);
         CinemaRoom room2 = new CinemaRoom(true, false);
         CinemaRoom room3 = new CinemaRoom(true, true);
@@ -35,6 +36,13 @@ public class Main {
         auction.buyOutAuction();
 
         // Wielodziedziczenie
+        // Inny przykład użycia, drukowanie zeskanowanego dokumenty (np. funkcja scanAndPrint())
+        Copier copier = new Copier("device", "serialNo", "model",
+                "producer", "1920x1080", true, 100, true);
+        System.out.println(copier.getMaxScanResolution());
+        System.out.println(copier.getSpeedOfPrinting());
+
+        // Wieloaspektowe
 
     }
 }

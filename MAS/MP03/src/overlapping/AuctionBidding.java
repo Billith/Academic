@@ -16,12 +16,17 @@ public class AuctionBidding extends ObjectPlusPlus {
     }
 
     public boolean bidInAnAuction(BigDecimal newBid) {
-        if((newBid.compareTo(startingPrice) == -1) && (newBid.compareTo(highestBid) == -1)) {
-            if(newBid.subtract(highestBid).compareTo(minimalBidDifference) == -1) {
-                this.highestBid = newBid;
-                return true;
+        if(highestBid != null) {
+            if((newBid.compareTo(startingPrice) == -1) && (newBid.compareTo(highestBid) == -1)) {
+                if (newBid.subtract(highestBid).compareTo(minimalBidDifference) == -1) {
+                    this.highestBid = newBid;
+                    return true;
+                }
             }
+        } else {
+            highestBid = newBid;
         }
+
         return false;
     }
 }
