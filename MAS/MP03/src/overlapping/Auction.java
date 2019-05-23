@@ -7,10 +7,6 @@ import java.time.LocalDateTime;
 
 public class Auction extends ObjectPlusPlus {
 
-    private static String roleNameBidding = "bindingAuction";
-    private static String roleNameBuyNow = "buyNowAuction";
-    private static String roleNameGeneralization = "generalization";
-
     private String title;
     private LocalDateTime expirationTime;
     private int quantity;
@@ -75,5 +71,9 @@ public class Auction extends ObjectPlusPlus {
             throw new Exception("Tried call buyOutAuction function on non buyout auction object");
         }
     }
+
+    private final static String roleNameBidding = "bindingAuction";
+    private final static String roleNameBuyNow = "buyNowAuction";
+    private final static String roleNameGeneralization = "generalization";
 
 }

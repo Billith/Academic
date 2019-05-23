@@ -31,7 +31,6 @@ public abstract class ObjectPlus implements Serializable {
         }
     }
 
-
     public static List<ObjectPlus> getClassExtent(Class objectClass) {
         if (allExtents.containsKey(objectClass)) {
             return allExtents.get(objectClass);
