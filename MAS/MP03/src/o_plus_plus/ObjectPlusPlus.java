@@ -105,11 +105,32 @@ public abstract class ObjectPlusPlus extends ObjectPlus implements Serializable 
         Map<Object, ObjectPlusPlus> objectLink;
 
         if(!links.containsKey(roleName)) {
-            // No links for the role
             return false;
         }
 
         objectLink = links.get(roleName);
         return objectLink.containsValue(targetObject);
     }
+
+    private void replaceObjectLinks(ObjectPlusPlus obj) {
+        for(Map<Object, ObjectPlusPlus> map : links.values()) {
+            if(map.values().contains(obj)) {
+                for(Object key : map.keySet()) {
+                    ObjectPlusPlus valueObj = map.get(key);
+                    if(valueObj == obj) {
+                        map.replace(key, valueObj, obj);
+                    }
+                }
+            }
+        }
+    }
+
+    public void replaceObjectWith(ObjectPlusPlus obj) {
+        for(Map<Object, ObjectPlusPlus> map : links.values()) {
+            for(ObjectPlusPlus object : map.values()) {
+                object.replaceObjectLinks(obj);
+            }
+        }
+    }
+
 }

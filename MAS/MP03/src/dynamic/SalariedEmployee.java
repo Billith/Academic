@@ -1,5 +1,7 @@
 package dynamic;
 
+import o_plus_plus.ObjectPlus;
+
 public class SalariedEmployee extends Employee {
 
     private double monthlySalary;
@@ -12,6 +14,8 @@ public class SalariedEmployee extends Employee {
     public SalariedEmployee(Employee emp, double monthlySalary) {
         super(emp.firstName, emp.lastName, emp.pesel);
         this.monthlySalary = monthlySalary;
+        emp.replaceObjectWith(this);
+        ObjectPlus.removeObjectFromExtent(emp);
     }
 
 }

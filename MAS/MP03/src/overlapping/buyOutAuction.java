@@ -4,11 +4,11 @@ import o_plus_plus.ObjectPlusPlus;
 
 import java.math.BigDecimal;
 
-public class AuctionBuyNow extends ObjectPlusPlus {
+public class buyOutAuction extends ObjectPlusPlus {
 
     private BigDecimal buyOutPrice;
 
-    public AuctionBuyNow(BigDecimal buyOutPrice) {
+    public buyOutAuction(BigDecimal buyOutPrice) {
         this.buyOutPrice = buyOutPrice;
     }
 

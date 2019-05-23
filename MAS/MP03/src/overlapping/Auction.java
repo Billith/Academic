@@ -18,8 +18,8 @@ public class Auction extends ObjectPlusPlus {
         this.expirationTime = expirationTime;
         this.quantity = quantity;
         this.isActive = true;
-        addAuctionBidding(startingPrice, minimalBidDifference);
-        addAuctionBuyNow(buyOutPrice);
+        addBiddingAuction(startingPrice, minimalBidDifference);
+        addBuyNowAuction(buyOutPrice);
     }
 
     public Auction(String title, LocalDateTime expirationTime, int quantity, BigDecimal startingPrice, BigDecimal minimalBidDifference) {
@@ -27,7 +27,7 @@ public class Auction extends ObjectPlusPlus {
         this.title = title;
         this.expirationTime = expirationTime;
         this.quantity = quantity;
-        addAuctionBidding(startingPrice, minimalBidDifference);
+        addBiddingAuction(startingPrice, minimalBidDifference);
     }
 
     public Auction(String title, LocalDateTime expirationTime, int quantity, BigDecimal buyOutPrice) {
@@ -35,27 +35,23 @@ public class Auction extends ObjectPlusPlus {
         this.title = title;
         this.expirationTime = expirationTime;
         this.quantity = quantity;
-        addAuctionBuyNow(buyOutPrice);
+        addBuyNowAuction(buyOutPrice);
     }
 
-    public void setActive(boolean active) {
-        isActive = active;
-    }
-
-    private void addAuctionBidding(BigDecimal startingPrice, BigDecimal minimalBidDifference) {
-        AuctionBidding auction = new AuctionBidding(startingPrice, minimalBidDifference);
+    private void addBiddingAuction(BigDecimal startingPrice, BigDecimal minimalBidDifference) {
+        BiddingAuction auction = new BiddingAuction(startingPrice, minimalBidDifference);
         this.addLink(roleNameBidding, roleNameGeneralization, auction);
     }
 
-    private void addAuctionBuyNow(BigDecimal buyOutPrice) {
-        AuctionBuyNow auction = new AuctionBuyNow(buyOutPrice);
+    private void addBuyNowAuction(BigDecimal buyOutPrice) {
+        buyOutAuction auction = new buyOutAuction(buyOutPrice);
         this.addLink(roleNameBuyNow, roleNameGeneralization, auction);
     }
 
     public void bidInAnAuction(BigDecimal newBid) throws Exception {
         try {
             ObjectPlusPlus[] obj = this.getLinks(roleNameBidding);
-            boolean res = ((AuctionBidding)obj[0]).bidInAnAuction(newBid);
+            boolean res = ((BiddingAuction)obj[0]).bidInAnAuction(newBid);
             this.setActive(!res);
         } catch (Exception e) {
             e.printStackTrace();
@@ -70,6 +66,10 @@ public class Auction extends ObjectPlusPlus {
         } catch (Exception e) {
             throw new Exception("Tried call buyOutAuction function on non buyout auction object");
         }
+    }
+
+    private void setActive(boolean active) {
+        isActive = active;
     }
 
     private final static String roleNameBidding = "bindingAuction";
