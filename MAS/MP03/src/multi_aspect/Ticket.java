@@ -15,7 +15,7 @@ public abstract class Ticket {
     }
 
     public BigDecimal getPrice() {
-        return price.multiply(vipFreeInPercent);
+        return (isVipTicket) ? price.multiply(vipFreeInPercent) : price;
     }
 
     private static BigDecimal vipFreeInPercent = new BigDecimal(1.2d);
