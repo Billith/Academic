@@ -45,8 +45,8 @@ public class Main {
         System.out.println(copier.getSpeedOfPrinting());
 
         // Wieloaspektowe
-        LongTermTicket ticket = new LongTermTicket(1, new BigDecimal(25), LocalDate.now(), LocalDate.of(2019, 06,30));
-
+        LongTermTicket ticket = new LongTermTicket(1, new BigDecimal(20), true, LocalDate.now(),
+                LocalDate.of(2019 ,06,30));
 
         // Dynamic
         SalariedEmployee emp1 = new SalariedEmployee("Łukasz", "Dyduch", "11223344555", 8000);

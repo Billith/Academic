@@ -7,8 +7,8 @@ public class OneTimeTicket extends Ticket {
 
     private LocalDate movieProjectionDate;
 
-    public OneTimeTicket(int tickerNumber, BigDecimal price, LocalDate movieProjectionDate) {
-        super(tickerNumber, price);
+    public OneTimeTicket(int tickerNumber, BigDecimal price, boolean isVipTicket, LocalDate movieProjectionDate) {
+        super(tickerNumber, price, isVipTicket);
         this.movieProjectionDate = movieProjectionDate;
     }
 
