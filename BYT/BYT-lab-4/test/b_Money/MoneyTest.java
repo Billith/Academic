@@ -1,9 +1,9 @@
 package b_Money;
 
-import static org.junit.Assert.*;
-
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class MoneyTest {
 	Currency SEK, DKK, NOK, EUR;
@@ -25,27 +25,47 @@ public class MoneyTest {
 
 	@Test
 	public void testGetAmount() {
-		fail("Write test case here");
+		assertEquals(Integer.valueOf(10000),SEK100.getAmount());
+		assertEquals(Integer.valueOf(1000),EUR10.getAmount());
+		assertEquals(Integer.valueOf(20000),SEK200.getAmount());
+		assertEquals(Integer.valueOf(2000),EUR20.getAmount());
+		assertEquals(Integer.valueOf(0),SEK0.getAmount());
+		assertEquals(Integer.valueOf(0),EUR0.getAmount());
 	}
 
 	@Test
 	public void testGetCurrency() {
-		fail("Write test case here");
+		assertEquals(SEK, SEK100.getCurrency());
+		assertEquals(EUR, EUR10.getCurrency());
+		assertEquals(SEK, SEK200.getCurrency());
+		assertEquals(EUR, EUR20.getCurrency());
+		assertEquals(SEK, SEK0.getCurrency());
+		assertEquals(EUR, EUR0.getCurrency());
 	}
 
 	@Test
 	public void testToString() {
-		fail("Write test case here");
+		assertEquals("100.0 SEK", SEK100.toString());
+		assertEquals("10.0 EUR", EUR10.toString());
+		assertEquals("200.0 SEK", SEK200.toString());
+		assertEquals("20.0 EUR", EUR20.toString());
+		assertEquals("0.0 SEK", SEK0.toString());
+		assertEquals("0.0 EUR", EUR0.toString());
 	}
 
 	@Test
 	public void testGlobalValue() {
-		fail("Write test case here");
+		assertEquals(Integer.valueOf(66667), SEK100.universalValue());
+		assertEquals(Integer.valueOf(667), EUR10.universalValue());
+		assertEquals(Integer.valueOf(133333), SEK200.universalValue());
+		assertEquals(Integer.valueOf(1333), EUR20.universalValue());
+		assertEquals(Integer.valueOf(0), SEK0.universalValue());
+		assertEquals(Integer.valueOf(0), EUR0.universalValue());
 	}
 
 	@Test
 	public void testEqualsMoney() {
-		fail("Write test case here");
+		assertTrue(SEK0.equals(EUR0));
 	}
 
 	@Test
