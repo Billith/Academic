@@ -1,0 +1,9 @@
+ - dodatkowa klasa projekcja filmu
+ - asocjacje 1 do wielu niepotrzbne, mozna usunac
+
+---------------------------------------------------------------------------------
+
+poprawki na diagramie projektowym:
+==================================
+ - usunięcia asocjacji bilet okresowy i rezerwacja sali (aktualnie każdy bilet jest powiązany), ponieważ bilet okresowy zapewnia wejście na dowolny film i nie jest powiązany z konkretnym wydarzeniem
+ - dodanie atrybutu ticketIdCounter, atrybut do generowania unikatowych Id dla biletów
