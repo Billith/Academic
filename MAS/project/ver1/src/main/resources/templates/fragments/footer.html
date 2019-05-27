@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Iluzjon Cinema</title>
+</head>
+<body>
+    <div th:fragment="footer">
+        <span sec:authorize="isAuthenticated()">
+            <span sec:authentication="name"></span>
+            <span sec:authentication="principal.authorities"></span>
+        </span>
+        <div>Iluzjon System @2019 s15599</div>
+    </div>
+</body>
+</html>
