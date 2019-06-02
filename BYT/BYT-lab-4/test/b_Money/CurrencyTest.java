@@ -42,16 +42,16 @@ public class CurrencyTest {
 	
 	@Test
 	public void testGlobalValue() {
-		assertEquals(Integer.valueOf(100), SEK.universalValue(15));
-		assertEquals(Integer.valueOf(100), DKK.universalValue(20));
-		assertEquals(Integer.valueOf(100), EUR.universalValue(150));
+		assertEquals(Integer.valueOf(2), SEK.universalValue(15));
+		assertEquals(Integer.valueOf(4), DKK.universalValue(20));
+		assertEquals(Integer.valueOf(225), EUR.universalValue(150));
 	}
 	
 	@Test
 	public void testValueInThisCurrency() {
-		assertEquals(Integer.valueOf(15), SEK.valueInThisCurrency(20, DKK));
-		assertEquals(Integer.valueOf(20), DKK.valueInThisCurrency(150, EUR));
-		assertEquals(Integer.valueOf(150), EUR.valueInThisCurrency(15, SEK));
+		assertEquals(Integer.valueOf(27), SEK.valueInThisCurrency(20, DKK));
+		assertEquals(Integer.valueOf(1125), DKK.valueInThisCurrency(150, EUR));
+		assertEquals(Integer.valueOf(1), EUR.valueInThisCurrency(15, SEK));
 	}
 
 }

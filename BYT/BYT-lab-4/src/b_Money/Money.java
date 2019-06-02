@@ -73,7 +73,7 @@ public class Money implements Comparable {
 	 * (Remember to convert the other Money before adding the amounts)
 	 */
 	public Money add(Money other) {
-		long result = Math.round(this.universalValue() + other.universalValue() * this.currency.getRate());
+		long result = Math.round((this.universalValue() + other.universalValue()) / this.currency.getRate());
 		return new Money((int)result, this.currency);
 	}
 
@@ -84,7 +84,7 @@ public class Money implements Comparable {
 	 * (Again, remember converting the value of the other Money to this Currency)
 	 */
 	public Money sub(Money other) {
-		long result = Math.round(this.universalValue() - other.universalValue() * this.currency.getRate());
+		long result = Math.round((this.universalValue() - other.universalValue()) / this.currency.getRate());
 		return new Money((int)result, this.currency);
 	}
 	

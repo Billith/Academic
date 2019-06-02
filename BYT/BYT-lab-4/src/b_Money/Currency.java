@@ -25,7 +25,7 @@ public class Currency {
 	 * @return The value of amount in the "universal currency"
 	 */
 	public Integer universalValue(Integer amount) {
-		long result = Math.round(amount / rate);
+		long result = Math.round(amount * rate);
 		return (int) result;
 	}
 
@@ -59,7 +59,7 @@ public class Currency {
 	*/
 	public Integer valueInThisCurrency(Integer amount, Currency othercurrency) {
 		Integer universalValue = othercurrency.universalValue(amount);
-		long result = Math.round(universalValue * rate);
+		long result = Math.round(universalValue / rate);
 		return (int) result;
 	}
 }
