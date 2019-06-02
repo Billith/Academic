@@ -5,3 +5,4 @@
 **/system_data.bin
 **/target
 **/META-INF
+**/*.class
