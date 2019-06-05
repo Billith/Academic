@@ -17,17 +17,4 @@ public class Discount extends ObjectPlusPlus {
         this.discountInPercent = discountInPercent;
     }
 
-    public void addTicket(Ticket ticket) {
-        if(!ticketList.contains(ticket)) {
-            ticketList.add(ticket);
-        }
-        if(!ticket.containsDiscount(this)) {
-            ticket.addDiscount(this);
-        }
-    }
-
-    public boolean containsTicket(Ticket ticket) {
-        return ticketList.contains(ticket);
-    }
-
 }

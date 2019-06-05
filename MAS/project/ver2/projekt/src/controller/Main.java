@@ -1,10 +1,6 @@
 package controller;
 
-import model.Employee;
-import model.OneTimeTicket;
-import model.Ticket;
-import model.TicketType;
-import model.oplusplus.ObjectPlus;
+import model.*;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -12,12 +8,15 @@ public class Main {
 
         Employee emp = new Employee(new String[]{"Łukasz"}, "Dyduch", "lukas.dyduch@cienema.com", 1, "1111111111", "777111222", "ul. Warszawska 1, Warszawa");
         Ticket ticket = new OneTimeTicket(false, TicketType.NORMAL);
+        Discount discount = new Discount("środy z Iluzjon", "Promocja aktywna tylko w środy", 5);
+
         ticket.addSeller(emp);
+        ticket.addDiscount(discount);
 
         ticket.showLinks("soldTicket", System.out);
+        ticket.showLinks("appliedDiscount", System.out);
         emp.showLinks("seller", System.out);
-
-        //System.out.println(ObjectPlus.getClassExtent(Employee.class).get(0));
+        discount.showLinks("ticketsWithDiscount", System.out);
 
         Persistence.saveSystemObjects();
     }

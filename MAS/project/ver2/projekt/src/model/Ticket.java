@@ -11,7 +11,6 @@ public abstract class Ticket extends ObjectPlusPlus {
     protected int ticketId;
     private boolean isVipTicket;
     private TicketType type;
-//    private Employee seller;
     private List<Discount> discountList;
     // protected BigDecimal price; //TODO
     // Asocjacja z siedzeniem w sali kinowej, na konkretnym seansie // TODO
@@ -20,39 +19,18 @@ public abstract class Ticket extends ObjectPlusPlus {
         this.ticketId = ++ticketCounter;
         this.isVipTicket = isVipTicket;
         this.type = type;
-//        this.seller = seller;
-        // this.price = price; // Cena powinna być brana z ascojacji z filmem/siedzeniem w kinie // TODO
     }
-
-//    public void setSeller(Employee employee) {
-//        if(seller != null) {
-//            try {
-//                seller.removeSoldTicket(this);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        this.seller = employee;
-//        employee.addSoldTicket(this);
-//    }
 
     public void addSeller(Employee employee) {
         this.addLink("soldTicket", "seller", employee);
     }
 
-
     public void addDiscount(Discount discount) {
-        if(!discountList.contains(discount)) {
-            discountList.add(discount);
-            discount.addTicket(this);
-        }
-        if(!discount.containsTicket(this)) {
-            discount.addTicket(this);
-        }
+        this.addLink("appliedDiscount", "ticketsWithDiscount", discount);
     }
 
-    public boolean containsDiscount(Discount discount) {
-        return discountList.contains(discount);
+    public String toString() {
+        return String.format("[ %s, id=%s, vip=%s, type=%s ]", this.getClass().getSimpleName(), ticketId, isVipTicket, type.toString());
     }
 
 }

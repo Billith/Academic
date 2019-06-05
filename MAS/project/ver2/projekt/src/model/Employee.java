@@ -21,20 +21,6 @@ public class Employee extends Person {
         this.address = address;
     }
 
-    public void addSoldTicket(Ticket ticket) {
-        if(!soldTickets.contains(ticket)) {
-            soldTickets.add(ticket);
-        }
-    }
-
-    public void removeSoldTicket(Ticket ticket) throws Exception {
-        if(soldTickets.contains(ticket)) {
-            this.soldTickets.remove(ticket);
-        } else {
-            throw new Exception("[!] This employee didn't sold this ticket");
-        }
-    }
-
-    //public void sellTicket() TODO
+    //public void sellTicket() TODO ?
 
 }
