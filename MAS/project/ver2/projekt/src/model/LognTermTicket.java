@@ -7,8 +7,8 @@ public class LognTermTicket extends Ticket {
     private LocalDate validFrom;
     private LocalDate validTo;
 
-    public LognTermTicket(LocalDate validFrom, LocalDate validTo) {
-        super();
+    public LognTermTicket(boolean isVipTicket, TicketType type, LocalDate validFrom, LocalDate validTo) {
+        super(isVipTicket, type);
         this.validFrom = validFrom;
         this.validTo = validTo;
     }

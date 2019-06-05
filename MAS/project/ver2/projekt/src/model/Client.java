@@ -6,8 +6,8 @@ public class Client extends Person {
 
     private LocalDate birthDate;
 
-    public Client(String firstName, String lastName, String email, String phoneNumber, String address, LocalDate birthDate) {
-        this.firstName = firstName;
+    public Client(String[] firstNames, String lastName, String email, String phoneNumber, String address, LocalDate birthDate) {
+        this.firstNames = firstNames;
         this.lastName = lastName;
         this.email = email;
         this.phoneNumber = phoneNumber;

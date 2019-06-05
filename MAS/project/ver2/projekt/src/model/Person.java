@@ -1,17 +1,17 @@
 package model;
 
-import model.oplusplus.ObjectPlus;
+import model.oplusplus.ObjectPlusPlus;
 
-public abstract class Person extends ObjectPlus {
+public abstract class Person extends ObjectPlusPlus {
 
-    protected String firstName;
+    protected String[] firstNames;
     protected String lastName;
     protected String email;
     protected String phoneNumber;
     protected String address;
 
     public String toString() {
-        return String.format("[ %s, fname=%s, lname=%s, email=%s ]", this.getClass().getSimpleName(), firstName, lastName, email);
+        return String.format("[ %s, fname=%s, lname=%s, email=%s ]", this.getClass().getSimpleName(), firstNames[0], lastName, email);
     }
 
 }
