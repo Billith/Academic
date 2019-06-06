@@ -10,7 +10,7 @@ public class Employee extends Person {
 
     private List<Ticket> soldTickets = new ArrayList<>();
 
-    public Employee(String[] firstNames, String lastName, String email, int employeeId,
+    public Employee(List<String> firstNames, String lastName, String email, int employeeId,
                     String pesel, String phoneNumber, String address) {
         this.firstNames = firstNames;
         this.lastName = lastName;
