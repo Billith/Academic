@@ -1,9 +1,11 @@
 package model;
 
+import model.oplusplus.ObjectPlusPlus;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class Room {
+public class Room extends ObjectPlusPlus {
 
     private int roomId;
     private int capacity;

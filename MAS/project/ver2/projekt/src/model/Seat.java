@@ -1,6 +1,8 @@
 package model;
 
-public class Seat {
+import model.oplusplus.ObjectPlusPlus;
+
+public class Seat extends ObjectPlusPlus {
 
     private int seatNumber;
     private int rowNumber;
@@ -12,7 +14,7 @@ public class Seat {
         this.room = room;
     }
 
-    public static Seat SeatFabric(int seatNumber, int rowNumber, Room room) throws Exception {
+    public static Seat seatFabric(int seatNumber, int rowNumber, Room room) throws Exception {
         if(room == null) {
             throw new Exception("[!] Given room doesn't exists");
         }

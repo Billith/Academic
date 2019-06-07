@@ -3,6 +3,7 @@ package controller;
 import model.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 
 public class Main {
@@ -16,6 +17,13 @@ public class Main {
         Movie movie = new Movie("title", "director", "PL", 2018,
                 "desc", 120, 14, Arrays.asList("comedy", "romance"));
         MovieProjection movieProjection = new MovieProjection(RoomType.TWO_D, new BigDecimal(20), movie);
+        Room room = new Room(1, 30, true, RoomType.TWO_D);
+        RoomReservation reservation = new RoomReservation(
+                LocalDateTime.of(2019, 11, 1, 15, 20),
+                LocalDateTime.of(2019, 11, 1, 17,40),
+                room,
+                movieProjection
+        );
 
         ticket.addSeller(emp);
         ticket.addDiscount(discount);
@@ -26,6 +34,10 @@ public class Main {
         discount.showLinks("ticketsWithDiscount", System.out);
         movie.showLinks("displayedMovie", System.out);
         movieProjection.showLinks("filmToDisplay", System.out);
+        room.showLinks("reservationRoom", System.out);
+        movieProjection.showLinks("reservationEvent", System.out);
+        reservation.showLinks("reservedRoom", System.out);
+        reservation.showLinks("heldEvent", System.out);
 
         Persistence.saveSystemObjects();
     }
