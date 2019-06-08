@@ -2,8 +2,6 @@ package model;
 
 import model.oplusplus.ObjectPlusPlus;
 
-import java.util.List;
-
 public abstract class Ticket extends ObjectPlusPlus {
 
     private static int ticketCounter = 0;
@@ -11,17 +9,17 @@ public abstract class Ticket extends ObjectPlusPlus {
     protected int ticketId;
     private boolean isVipTicket;
     private TicketType type;
-    private List<Discount> discountList;
-    // protected BigDecimal price; //TODO
-    // Asocjacja z siedzeniem w sali kinowej, na konkretnym seansie // TODO
 
-    public Ticket(boolean isVipTicket, TicketType type) {
+    public Ticket(boolean isVipTicket, TicketType type, RoomReservation reservation, Seat seat) {
         this.ticketId = ++ticketCounter;
         this.isVipTicket = isVipTicket;
         this.type = type;
+
+        this.addLink("ticketReservation", "reservationTicket", reservation);
+        this.addLink("ticketSeat", "seatTicket", seat);
     }
 
-    public void addSeller(Employee employee) {
+    public void setSeller(Employee employee) {
         this.addLink("soldTicket", "seller", employee);
     }
 

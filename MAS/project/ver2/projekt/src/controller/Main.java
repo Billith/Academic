@@ -12,7 +12,7 @@ public class Main {
 
         Employee emp = new Employee(Arrays.asList("Łukasz"), "Dyduch", "lukas.dyduch@cienema.com",
                 1, "1111111111", "777111222", "ul. Warszawska 1, Warszawa");
-        Ticket ticket = new OneTimeTicket(false, TicketType.NORMAL);
+
         Discount discount = new Discount("środy z Iluzjon", "Promocja aktywna tylko w środy", 5);
         Movie movie = new Movie("title", "director", "PL", 2018,
                 "desc", 120, 14, Arrays.asList("comedy", "romance"));
@@ -24,8 +24,10 @@ public class Main {
                 room,
                 movieProjection
         );
+        Seat seat = Seat.seatFabric(1, 1, room);
+        Ticket ticket = new OneTimeTicket(false, TicketType.NORMAL, reservation, seat);
 
-        ticket.addSeller(emp);
+        ticket.setSeller(emp);
         ticket.addDiscount(discount);
 
         ticket.showLinks("soldTicket", System.out);

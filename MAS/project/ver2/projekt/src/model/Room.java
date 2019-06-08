@@ -1,5 +1,6 @@
 package model;
 
+import model.oplusplus.ObjectPlus;
 import model.oplusplus.ObjectPlusPlus;
 
 import java.util.ArrayList;
@@ -30,6 +31,17 @@ public class Room extends ObjectPlusPlus {
             seats.add(seat);
             allSeats.add(seat);
         }
+    }
+
+    public static List<Room> getRoomList(RoomType requiredRoom) {
+        List<Room> list = new ArrayList<>();
+        List<ObjectPlus> allRooms = ObjectPlus.getClassExtent(Room.class);
+        for(ObjectPlus obj : allRooms) {
+            if(((Room) obj).roomType == requiredRoom) {
+                list.add((Room) obj);
+            }
+        }
+        return list;
     }
 
 }
