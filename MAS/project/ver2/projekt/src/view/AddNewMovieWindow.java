@@ -1,20 +1,27 @@
 package view;
 
+import controller.MovieValidator;
+import controller.ValidateDataException;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.Movie;
 
-import java.util.Arrays;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.List;
+import java.util.Optional;
 
 public class AddNewMovieWindow extends Application {
+
+    private ObservableList genresList = FXCollections.observableArrayList();
 
     @Override
     public void start(Stage primaryStage) {
@@ -23,15 +30,32 @@ public class AddNewMovieWindow extends Application {
         grid.setPadding(new Insets(10, 10, 10, 10));
         grid.setVgap(10);
 
-        TextField movieTitle = new TextField("tytuł filmu");
-        TextField movieDirector = new TextField("reżyser");
-        TextField productionCountry = new TextField("kraj produkcji");
-        TextField productionYear = new TextField("rok produkcji");
-        TextArea movieDescription = new TextArea("opis");
-        TextField duration = new TextField("czas trwania filmu");
-        TextField minimalAge = new TextField("minimalny wiek widza");
-        TextArea genres = new TextArea("gatunki filmowe");
+        TextField movieTitle = new PersistentPromptTextField("", "tytuł filmu");
+        TextField movieDirector = new PersistentPromptTextField("", "reżyser");
+        TextField productionCountry = new PersistentPromptTextField("","kraj produkcji");
+        TextField productionYear = new PersistentPromptTextField("", "rok produkcji");
+        TextArea movieDescription = new PersistentPromptTextArea("", "opis");
+        TextField duration = new PersistentPromptTextField("", "czas trwania filmu");
+        TextField minimalAge = new PersistentPromptTextField("", "minimalny wiek widza");
+        TextArea genres = new PersistentPromptTextArea("", "gatunki filmowe");
         genres.setPrefHeight(50);
+
+        VBox genresBox = new VBox();
+        ListView<String> genresLV = new ListView<>();
+        Button genresB = new Button("+");
+        genresLV.setPrefHeight(50);
+        genresLV.setItems(genresList);
+        genresB.setMaxWidth(Double.MAX_VALUE);
+        genresB.setOnAction(event -> {
+            TextInputDialog newGenre = new TextInputDialog();
+            newGenre.setTitle("Dodaj nową kategorię");
+            newGenre.setContentText("Podaj nową kategorię:");
+            Optional<String> result = newGenre.showAndWait();
+            if(result.isPresent() && !result.get().trim().equals("")) {
+                genresList.add(result.get());
+            }
+        });
+        genresBox.getChildren().addAll(genresLV, genresB);
 
         Button confirm = new Button("Zatwierdź");
         Button cancel = new Button("Anuluj");
@@ -40,7 +64,7 @@ public class AddNewMovieWindow extends Application {
         buttons.setSpacing(10);
         buttons.setAlignment(Pos.CENTER_RIGHT);
 
-        confirm.setOnAction(event -> validateInputAndCreateReservation(movieTitle, movieDirector, productionCountry, productionYear, movieDescription, duration, minimalAge, genres, primaryStage));
+        confirm.setOnAction(event -> createMovie(movieTitle, movieDirector, productionCountry, productionYear, movieDescription, duration, minimalAge, genresList, primaryStage));
         cancel.setOnAction(event -> primaryStage.close());
 
         grid.add(movieTitle, 0, 0);
@@ -50,58 +74,61 @@ public class AddNewMovieWindow extends Application {
         grid.add(movieDescription, 0, 4);
         grid.add(duration, 0, 5);
         grid.add(minimalAge, 0, 6);
-        grid.add(genres, 0, 7);
+        grid.add(genresBox, 0 ,7);
         grid.add(buttons, 0, 8);
+
+        Platform.runLater(() -> genresBox.requestFocus());
 
         Scene scene = new Scene(grid);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Dodaj nowy film");
-        primaryStage.setHeight(500);
-        primaryStage.setWidth(400);
+        primaryStage.setHeight(550);
+        primaryStage.setWidth(475);
         primaryStage.show();
     }
 
-    private void validateInputAndCreateReservation(TextField movieTitle, TextField movieDirector, TextField productionCountry,
-                                                   TextField productionYear, TextArea movieDescription, TextField duration,
-                                                   TextField minimalAge, TextArea genres, Stage primaryStage) {
+    private void createMovie(TextField movieTitle, TextField movieDirector, TextField productionCountry,
+                             TextField productionYear, TextArea movieDescription, TextField duration,
+                             TextField minimalAge, List<String> genres, Stage primaryStage) {
 
-        // https://stackoverflow.com/questions/8923398/regex-doesnt-work-in-string-matches
-        Pattern p = Pattern.compile("^\\d+$");
-        Matcher mYear = p.matcher(productionYear.getText());
-        Matcher mDuration = p.matcher(duration.getText());
-        Matcher mAge = p.matcher(minimalAge.getText());
-
-        if(!mDuration.matches() || !mAge.matches() || !mYear.matches()) {
-            new Alert(Alert.AlertType.ERROR, "Niepoprawne dane. Czas trwania filmu, minimalny wiek widza i rok produkcji muszą być liczbą.").showAndWait();
+        try {
+            MovieValidator.validateInput(movieTitle, movieDirector, productionCountry, productionYear, movieDescription, duration, minimalAge, genres);
+        } catch (ValidateDataException e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK).showAndWait();
             return;
         }
 
         Movie movie = new Movie(movieTitle.getText(), movieDirector.getText(), productionCountry.getText(),
                 Integer.parseInt(productionYear.getText()), movieDescription.getText(), Integer.parseInt(duration.getText()),
-                Integer.parseInt(minimalAge.getText()), Arrays.asList(genres.getText().split(",")));
+                Integer.parseInt(minimalAge.getText()), genres);
 
-        ButtonType yes = new ButtonType("Tak");
-        ButtonType no = new ButtonType("Nie");
-
-        new Alert(
-                Alert.AlertType.CONFIRMATION,
-                "Film został pomyślnie dodany do sysemu.\nCzy chcesz zarezerwować salę na projekcje tego filmu?",
-                yes, no
-        )
-        .showAndWait()
-        .ifPresent(response -> {
-            if (response == yes) {
-                displayNewReservationWindow(movie, primaryStage);
-            }
-            else if (response == no) {
-                primaryStage.close();
-            }
-        });
+        promptForReservationCreation(movie, primaryStage);
 
     }
 
+    private void promptForReservationCreation(Movie movie, Stage primaryStage) {
+        ButtonType yes = new ButtonType("Tak");
+        ButtonType no = new ButtonType("Nie");
+        String msg = "Film został pomyślnie dodany do sysemu.\nCzy chcesz zarezerwować salę na projekcje tego filmu?";
+        new Alert(Alert.AlertType.CONFIRMATION, msg, yes, no)
+                .showAndWait()
+                .ifPresent(response -> {
+                    if (response == yes) {
+                        displayNewReservationWindow(movie, primaryStage);
+                    }
+                    else if (response == no) {
+                        primaryStage.close();
+                    }
+                });
+    }
+
     private void displayNewReservationWindow(Movie movie, Stage primaryStage) {
-        Scene scene = new Scene(new AddNewReservationWindow(movie));
+        Scene scene = new Scene(new AddNewReservationWindow(movie, primaryStage));
+        primaryStage.setTitle("Dodaj rezerwacje sali");
         primaryStage.setScene(scene);
+    }
+
+    public static void startUI() {
+        launch();
     }
 }

@@ -9,9 +9,7 @@ public abstract class Event extends ObjectPlusPlus {
     public Event(RoomType requiredRoomType) {
         this.requiredRoomType = requiredRoomType;
     }
-//
-//    public RoomType getRequiredRoomType() {
-//        return requiredRoomType;
-//    }
+
+    public abstract String getEventName() throws Exception;
 
 }

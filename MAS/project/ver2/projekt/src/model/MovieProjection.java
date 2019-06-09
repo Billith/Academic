@@ -13,6 +13,8 @@ public class MovieProjection extends Event {
         this.addLink("filmToDisplay", "displayedMovie", movie);
     }
 
-
-
+    @Override
+    public String getEventName() throws Exception {
+        return ((Movie) this.getLinks("filmToDisplay")[0]).getTitle();
+    }
 }

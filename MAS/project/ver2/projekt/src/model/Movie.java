@@ -29,6 +29,10 @@ public class Movie extends ObjectPlusPlus {
         this.genre = genre.stream().map(String::trim).collect(Collectors.toList());
     }
 
+    public String getTitle() {
+        return this.title;
+    }
+
     public String toString() {
         return String.format("[ %s title=%s, director=%s, country=%s, year=%s, desc=%s, duration=%s, age=%s, genres=%s ]",
                 this.getClass().getSimpleName(),

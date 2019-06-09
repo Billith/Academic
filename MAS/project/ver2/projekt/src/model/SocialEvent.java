@@ -10,4 +10,10 @@ public class SocialEvent extends Event {
         this.title = title;
         this.description = description;
     }
+
+    @Override
+    public String getEventName() {
+        return this.title;
+    }
+
 }

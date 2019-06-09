@@ -1,5 +1,6 @@
 package model;
 
+import model.oplusplus.ObjectPlus;
 import model.oplusplus.ObjectPlusPlus;
 
 import java.time.LocalDateTime;
@@ -26,10 +27,46 @@ public class RoomReservation extends ObjectPlusPlus {
         this.event.addLink("reservationEvent", "heldEvent", this);
     }
 
-    public void reserveSeats(Seat seat) {
+    public String getEvent() throws Exception {
+        System.out.println(((Event) this.getLinks("heldEvent")[0]).getEventName());
+        return ((Event) this.getLinks("heldEvent")[0]).getEventName();
+    }
+
+    public Room getRoom() {
+        try {
+            return (Room) this.getLinks("reservedRoom")[0];
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public LocalDateTime getStart() {
+        return this.start;
+    }
+
+    public LocalDateTime getEnd() {
+        return end;
+    }
+
+    public void reserveSeat(Seat seat) {
         if(!alreadyTakenSeats.contains(seat)) {
             alreadyTakenSeats.add(seat);
         }
+    }
+
+    public static List<RoomReservation> getReservationsForNextWeek() {
+        List<RoomReservation> matchingReservations = new ArrayList<>();
+        List<ObjectPlus> allReservations = ObjectPlus.getClassExtent(RoomReservation.class);
+        LocalDateTime nextWeek = LocalDateTime.now().plusDays(7);
+
+        for(ObjectPlus obj : allReservations) {
+            RoomReservation currentReservation = (RoomReservation) obj;
+            if(currentReservation.start.isBefore(nextWeek)) {
+                matchingReservations.add(currentReservation);
+            }
+        }
+
+        return matchingReservations;
     }
 
 }

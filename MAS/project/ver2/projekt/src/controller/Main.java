@@ -1,6 +1,8 @@
 package controller;
 
 import model.*;
+import model.oplusplus.ObjectPlus;
+import view.AddNewMovieWindow;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -14,17 +16,25 @@ public class Main {
                 1, "1111111111", "777111222", "ul. Warszawska 1, Warszawa");
 
         Discount discount = new Discount("środy z Iluzjon", "Promocja aktywna tylko w środy", 5);
-        Movie movie = new Movie("title", "director", "PL", 2018,
+        Movie movie = new Movie("movie1", "director", "PL", 2018,
                 "desc", 120, 14, Arrays.asList("comedy", "romance"));
         MovieProjection movieProjection = new MovieProjection(RoomType.TWO_D, new BigDecimal(20), movie);
-        Room room = new Room(1, 30, true, RoomType.TWO_D);
+        Room room1 = new Room(1, 30, true, RoomType.TWO_D);
+        Room room2 = new Room(2, 30, true, RoomType.THREE_D);
+        Room room3 = new Room(3, 30, true, RoomType.TWO_D);
         RoomReservation reservation = new RoomReservation(
-                LocalDateTime.of(2019, 11, 1, 15, 20),
-                LocalDateTime.of(2019, 11, 1, 17,40),
-                room,
+                LocalDateTime.of(2019, 06, 10, 15, 20),
+                LocalDateTime.of(2019, 06, 10, 17,40),
+                room1,
                 movieProjection
         );
-        Seat seat = Seat.seatFabric(1, 1, room);
+        RoomReservation reservation1 = new RoomReservation(
+                LocalDateTime.of(2019, 06, 11, 15, 20),
+                LocalDateTime.of(2019, 06, 11, 18,40),
+                room2,
+                movieProjection
+        );
+        Seat seat = Seat.seatFabric(1, 1, room1);
         Ticket ticket = new OneTimeTicket(false, TicketType.NORMAL, reservation, seat);
 
         ticket.setSeller(emp);
@@ -36,10 +46,13 @@ public class Main {
         discount.showLinks("ticketsWithDiscount", System.out);
         movie.showLinks("displayedMovie", System.out);
         movieProjection.showLinks("filmToDisplay", System.out);
-        room.showLinks("reservationRoom", System.out);
+        room1.showLinks("reservationRoom", System.out);
         movieProjection.showLinks("reservationEvent", System.out);
         reservation.showLinks("reservedRoom", System.out);
         reservation.showLinks("heldEvent", System.out);
+
+        AddNewMovieWindow.startUI();
+        System.out.println(ObjectPlus.getClassExtent(Room.class));
 
         Persistence.saveSystemObjects();
     }
