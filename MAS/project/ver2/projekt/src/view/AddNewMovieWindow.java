@@ -10,9 +10,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import model.Movie;
 
@@ -41,12 +39,14 @@ public class AddNewMovieWindow extends Application {
         genres.setPrefHeight(50);
 
         VBox genresBox = new VBox();
+        HBox addAndRemoveBox = new HBox();
         ListView<String> genresLV = new ListView<>();
-        Button genresB = new Button("+");
-        genresLV.setPrefHeight(50);
+        Button genresAdd = new Button("+");
+        Button genresRemove = new Button("-");
+        genresLV.setPrefHeight(100);
         genresLV.setItems(genresList);
-        genresB.setMaxWidth(Double.MAX_VALUE);
-        genresB.setOnAction(event -> {
+        genresAdd.setMaxWidth(Double.MAX_VALUE);
+        genresAdd.setOnAction(event -> {
             TextInputDialog newGenre = new TextInputDialog();
             newGenre.setTitle("Dodaj nową kategorię");
             newGenre.setContentText("Podaj nową kategorię:");
@@ -55,7 +55,15 @@ public class AddNewMovieWindow extends Application {
                 genresList.add(result.get());
             }
         });
-        genresBox.getChildren().addAll(genresLV, genresB);
+        genresRemove.setMaxWidth(Double.MAX_VALUE);
+        genresRemove.setOnAction(event -> {
+            String selectedGenre = genresLV.getSelectionModel().getSelectedItem();
+            genresList.remove(selectedGenre);
+        });
+        addAndRemoveBox.setHgrow(genresAdd, Priority.ALWAYS);
+        addAndRemoveBox.setHgrow(genresRemove, Priority.ALWAYS);
+        addAndRemoveBox.getChildren().addAll(genresAdd, genresRemove);
+        genresBox.getChildren().addAll(genresLV, addAndRemoveBox);
 
         Button confirm = new Button("Zatwierdź");
         Button cancel = new Button("Anuluj");
@@ -82,8 +90,8 @@ public class AddNewMovieWindow extends Application {
         Scene scene = new Scene(grid);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Dodaj nowy film");
-        primaryStage.setHeight(550);
-        primaryStage.setWidth(475);
+        primaryStage.setMaxHeight(550);
+        primaryStage.setMaxWidth(525);
         primaryStage.show();
     }
 

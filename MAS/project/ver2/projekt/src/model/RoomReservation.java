@@ -28,7 +28,6 @@ public class RoomReservation extends ObjectPlusPlus {
     }
 
     public String getEvent() throws Exception {
-        System.out.println(((Event) this.getLinks("heldEvent")[0]).getEventName());
         return ((Event) this.getLinks("heldEvent")[0]).getEventName();
     }
 

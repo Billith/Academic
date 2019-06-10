@@ -21,6 +21,4 @@ public class Employee extends Person {
         this.address = address;
     }
 
-    //public void sellTicket() TODO ?
-
 }
