@@ -8,16 +8,17 @@ public abstract class Ticket extends ObjectPlusPlus {
 
     protected int ticketId;
     private boolean isVipTicket;
-    private TicketType type;
+    protected TicketType type;
 
-    public Ticket(boolean isVipTicket, TicketType type, RoomReservation reservation, Seat seat) {
+    public Ticket(boolean isVipTicket, TicketType type, Employee seller) {
         this.ticketId = ++ticketCounter;
         this.isVipTicket = isVipTicket;
         this.type = type;
 
-        this.addLink("ticketReservation", "reservationTicket", reservation);
-        this.addLink("ticketSeat", "seatTicket", seat);
+        this.setSeller(seller);
     }
+
+    public abstract double getFinalPrice();
 
     public void setSeller(Employee employee) {
         this.addLink("soldTicket", "seller", employee);

@@ -6,7 +6,7 @@ public class Discount extends ObjectPlusPlus {
 
     private String name;
     private String requirements;
-    private int discountInPercent;
+    private double discountInPercent;
 
     public Discount(String name, String requirements, int discountInPercent) {
         this.name = name;
@@ -14,4 +14,11 @@ public class Discount extends ObjectPlusPlus {
         this.discountInPercent = discountInPercent;
     }
 
+    public double getDiscountInPercent() {
+        return discountInPercent;
+    }
+
+    public String toString() {
+        return name + " - " + discountInPercent + "%";
+    }
 }

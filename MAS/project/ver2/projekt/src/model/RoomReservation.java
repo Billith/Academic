@@ -39,6 +39,14 @@ public class RoomReservation extends ObjectPlusPlus {
         }
     }
 
+    public Event getEventObject() {
+        try {
+            return (Event) this.getLinks("heldEvent")[0];
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public LocalDateTime getStart() {
         return this.start;
     }
