@@ -64,6 +64,7 @@ public class AddNewMovieWindow extends Application {
             TextInputDialog newGenre = new TextInputDialog();
             new JMetro(theme).applyTheme(newGenre.getDialogPane());
             newGenre.setTitle("Dodaj nową kategorię");
+            newGenre.setHeaderText("Dodaj nową kategorię");
             newGenre.setContentText("Podaj nową kategorię:");
             Optional<String> result = newGenre.showAndWait();
             if(result.isPresent() && !result.get().trim().equals("")) {
