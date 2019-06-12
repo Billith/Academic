@@ -4,6 +4,7 @@ import model.oplusplus.ObjectPlus;
 import model.oplusplus.ObjectPlusPlus;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,8 +52,16 @@ public class RoomReservation extends ObjectPlusPlus {
         return this.start;
     }
 
+    public String getStartString() {
+        return this.start.format(DateTimeFormatter.ofPattern("dd-MM-YY HH:mm"));
+    }
+
     public LocalDateTime getEnd() {
         return end;
+    }
+
+    public String getEndString() {
+        return this.end.format(DateTimeFormatter.ofPattern("dd-MM-YY HH:mm"));
     }
 
     public void reserveSeat(Seat seat) {

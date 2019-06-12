@@ -11,6 +11,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import jfxtras.styles.jmetro8.JMetro;
 import model.*;
 
 import java.math.BigDecimal;
@@ -62,15 +63,16 @@ public class AddNewReservationWindow extends GridPane {
         HBox startTimePicker = new HBox();
         DatePicker start = new DatePicker(LocalDate.now());
         TextField startTime = new TextField("00:00");
+        startTime.setMinHeight(15);
         startTimePicker.getChildren().addAll(start, startTime);
-        startTimePicker.setMaxWidth(200);
+        startTimePicker.setMaxWidth(225);
         startTimePicker.setSpacing(5);
 
         HBox endTimePicker = new HBox();
         DatePicker end = new DatePicker(LocalDate.now());
         TextField endTime = new TextField("00:00");
         endTimePicker.getChildren().addAll(end, endTime);
-        endTimePicker.setMaxWidth(200);
+        endTimePicker.setMaxWidth(225);
         endTimePicker.setSpacing(5);
 
         ComboBox<Room> availableRooms = new ComboBox<>();
@@ -84,12 +86,12 @@ public class AddNewReservationWindow extends GridPane {
         TableColumn startCol = new TableColumn("Od");
         TableColumn endCol = new TableColumn("Do");
         eventCol.setCellValueFactory(new PropertyValueFactory<RoomReservation, String>("event"));
-        eventCol.setEditable(false);
+        eventCol.setSortable(false);
         roomCol.setCellValueFactory(new PropertyValueFactory<RoomReservation, Room>("room"));
         roomCol.setSortable(false);
-        startCol.setCellValueFactory(new PropertyValueFactory<RoomReservation, LocalDateTime>("start"));
+        startCol.setCellValueFactory(new PropertyValueFactory<RoomReservation, String>("startString"));
         startCol.setSortable(false);
-        endCol.setCellValueFactory(new PropertyValueFactory<RoomReservation, LocalDateTime>("end"));
+        endCol.setCellValueFactory(new PropertyValueFactory<RoomReservation, String>("endString"));
         endCol.setSortable(false);
         table.setItems(nextWeekReservations);
         table.getColumns().addAll(eventCol, roomCol, startCol, endCol);
@@ -130,20 +132,26 @@ public class AddNewReservationWindow extends GridPane {
     private void createReservation(ToggleGroup group, DatePicker start, TextField startTime, DatePicker end,
                                    TextField endTime, ComboBox<Room> availableRooms, TextField ticketPrice, Stage primaryStage) {
         try {
+            ReservationValidator.validateInput(group, start, startTime, end, endTime, availableRooms, ticketPrice);
             RoomType requiredRoom = (group.getSelectedToggle().getUserData().equals("2D")) ? RoomType.TWO_D : RoomType.THREE_D;
             String[] startHourAndMinute = startTime.getText().trim().split(":");
             String[] endHourAndMinute = endTime.getText().trim().split(":");
-            ReservationValidator.validateInput(group, start, startTime, end, endTime, availableRooms, ticketPrice);
             new RoomReservation(
                     LocalDateTime.of(start.getValue(), LocalTime.of(Integer.parseInt(startHourAndMinute[0]), Integer.parseInt(startHourAndMinute[1]))),
                     LocalDateTime.of(end.getValue(), LocalTime.of(Integer.parseInt(endHourAndMinute[0]), Integer.parseInt(endHourAndMinute[1]))),
                     availableRooms.getValue(),
                     new MovieProjection(requiredRoom, new BigDecimal(Double.parseDouble(ticketPrice.getText())), movie)
             );
-            new Alert(Alert.AlertType.INFORMATION, "Rezerwacja została pomyślnie dodana do systemu.", ButtonType.OK).showAndWait();
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Rezerwacja została pomyślnie dodana do systemu.", ButtonType.OK);
+            new JMetro(AddNewMovieWindow.theme).applyTheme(alert.getDialogPane());
+            alert.setHeaderText("Informacja");
+            alert.setTitle("Informacja");
+            alert.showAndWait();
             primaryStage.close();
         } catch (ValidateDataException e) {
-            new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK).showAndWait();
+            Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK);
+            new JMetro(AddNewMovieWindow.theme).applyTheme(alert.getDialogPane());
+            alert.showAndWait();
         }
 
     }

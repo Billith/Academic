@@ -40,8 +40,8 @@ public class Main {
         ticket.addDiscount(discount);
         ticket.addDiscount(discount1);
 
-        //System.out.println(ticket.getFinalPrice());
-        //System.out.println(ticket2.getFinalPrice());
+        System.out.println(ticket.getFinalPrice());
+        System.out.println(ticket2.getFinalPrice());
 //
 //        ticket.setSeller(emp);
 //        ticket.addDiscount(discount);

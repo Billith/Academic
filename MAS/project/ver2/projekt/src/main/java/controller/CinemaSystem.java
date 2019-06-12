@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
-public class System {
+public class CinemaSystem {
 
     public static void main(String[] args) {
         createDemoObjects();
