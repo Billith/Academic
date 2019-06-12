@@ -26,11 +26,18 @@ public class Room extends ObjectPlusPlus {
     public void addSeat(Seat seat) throws Exception {
         if(!seats.contains(seat)) {
             if(allSeats.contains(seat)) {
-                throw new Exception("!] This seat is already assigned to another room!");
+                throw new Exception("[!] This seat is already assigned to another room!");
             }
             seats.add(seat);
             allSeats.add(seat);
         }
+    }
+
+    public void removeSeat(Seat seat) throws Exception {
+        if(!seats.contains(seat)) {
+            throw new Exception("[!] This seat isn't assigned to this room");
+        }
+        seats.remove(seat);
     }
 
     public static List<Room> getRoomList(RoomType requiredRoom) {

@@ -9,12 +9,16 @@ import java.util.Arrays;
 
 public class CinemaSystem {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ValidateDataException {
         createDemoObjects();
         AddNewMovieWindow.startUI();
     }
 
-    public static void createDemoObjects() {
+    /**
+     * Creates various objects in the system for the demonstration purposes.
+     * @throws ValidateDataException
+     */
+    public static void createDemoObjects() throws ValidateDataException {
 
         Employee emp1 = new Employee(
                 Arrays.asList("Krzysztof", "Jacek"),

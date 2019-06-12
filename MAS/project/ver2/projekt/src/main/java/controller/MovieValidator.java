@@ -7,6 +7,16 @@ import java.util.List;
 
 public class MovieValidator {
 
+    /**
+     * Validates input from the GUI, provided by the end user. Function doesn't validate values from Spinner controls
+     * since they can only return Integer values.
+     * @param movieTitle
+     * @param movieDirector
+     * @param productionCountry
+     * @param movieDescription
+     * @param genres
+     * @throws ValidateDataException
+     */
     public static void validateInput(TextField movieTitle, TextField movieDirector, TextField productionCountry,
             TextArea movieDescription, List<String> genres) throws ValidateDataException {
 

@@ -1,9 +1,13 @@
 package model;
 
+import controller.ValidateDataException;
+import javafx.scene.control.Alert;
 import model.oplusplus.ObjectPlus;
 import model.oplusplus.ObjectPlusPlus;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +22,12 @@ public class RoomReservation extends ObjectPlusPlus {
 
     private List<Seat> alreadyTakenSeats = new ArrayList<>();
 
-    public RoomReservation(LocalDateTime start, LocalDateTime end, Room reservedRoom, Event event) {
+    public RoomReservation(LocalDateTime start, LocalDateTime end, Room reservedRoom, Event event) throws ValidateDataException {
+
+        if(checkForOverlappingReservations(start, end, reservedRoom)) {
+            throw new ValidateDataException("Wprowadzona rezerwacja na daną salę nakłada się na inną. Proszę wybrać inną datę");
+        }
+
         this.start = start;
         this.end = end;
         this.reservedRoom = reservedRoom;
@@ -26,6 +35,25 @@ public class RoomReservation extends ObjectPlusPlus {
 
         this.reservedRoom.addLink("reservationRoom", "reservedRoom", this);
         this.event.addLink("reservationEvent", "heldEvent", this);
+    }
+
+    private boolean checkForOverlappingReservations(LocalDateTime start, LocalDateTime end, Room room) {
+        List<ObjectPlus> allReservations = ObjectPlus.getClassExtent(this.getClass());
+
+        for(ObjectPlus obj : allReservations) {
+            RoomReservation reservation = (RoomReservation) obj;
+            if(reservation.getRoom() == room) {
+                LocalDateTime startDate = start;
+                LocalDateTime endDate = end;
+                LocalDateTime reservationStartDate = reservation.getStart();
+                LocalDateTime reservationEndDate = reservation.getEnd();
+                if(startDate.isAfter(reservationStartDate) && startDate.isBefore(reservationEndDate) ||
+                        endDate.isAfter(reservationStartDate) && endDate.isBefore(reservationEndDate))
+                    return true;
+            }
+        }
+        return false;
+
     }
 
     public String getEvent() throws Exception {
