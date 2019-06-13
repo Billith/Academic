@@ -6,8 +6,22 @@ import model.Room;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Class is responsible for validation of users input from window that creates new RoomReservation object
+ */
 public class ReservationValidator {
 
+    /**
+     * Function validates user input
+     * @param group projection type radio buttons
+     * @param start start date of new reservation
+     * @param startTime start time of new reservation
+     * @param end end date of new reservation
+     * @param endTime end time of new reservation
+     * @param availableRooms list of all currently available rooms
+     * @param ticketPrice movie projection base ticket price
+     * @throws ValidateDataException thrown when users input is illegal
+     */
     public static void validateInput(ToggleGroup group, DatePicker start, TextField startTime,
                                      DatePicker end, TextField endTime, ComboBox<Room> availableRooms, TextField ticketPrice) throws ValidateDataException {
         try {
@@ -20,6 +34,11 @@ public class ReservationValidator {
         }
     }
 
+    /**
+     * Function validates ticket price
+     * @param ticketPrice base ticket price
+     * @throws ValidateDataException thrown when users input is illegal
+     */
     private static void validatePrice(TextField ticketPrice) throws ValidateDataException {
         Pattern p = Pattern.compile("^\\d+\\.\\d+$");
         Matcher mPrice = p.matcher(ticketPrice.getText().trim());
@@ -29,6 +48,11 @@ public class ReservationValidator {
         }
     }
 
+    /**
+     * Function validates list of available rooms
+     * @param availableRooms
+     * @throws ValidateDataException thrown when users input is illegal
+     */
     private static void validateRoom(ComboBox<Room> availableRooms) throws ValidateDataException {
         Room selectedRoom = availableRooms.getSelectionModel().getSelectedItem();
         if(selectedRoom == null) {
@@ -36,6 +60,14 @@ public class ReservationValidator {
         }
     }
 
+    /**
+     * Function validates dates of start and end of the reservation
+     * @param start start date of new reservation
+     * @param startTime start time of new reservation
+     * @param end end date of new reservation
+     * @param endTime end time of new reservation
+     * @throws ValidateDataException thrown when users input is illegal
+     */
     private static void validateDate(DatePicker start, TextField startTime, DatePicker end, TextField endTime) throws ValidateDataException {
         String reservationStart = startTime.getText().trim();
         String reservationEnd = endTime.getText().trim();
@@ -43,6 +75,12 @@ public class ReservationValidator {
         validateDateLogic(start, reservationStart, end, reservationEnd);
     }
 
+    /**
+     * Function validates dates of start and end of the reservation in terms of logic.
+     * @param start start date of new reservation
+     * @param end end date of new reservation
+     * @throws ValidateDataException thrown when users input is illegal
+     */
     private static void validateDateLogic(DatePicker start, String reservationStart, DatePicker end, String reservationEnd) throws ValidateDataException {
         try {
             if (start.getValue().isAfter(end.getValue())) {
@@ -81,6 +119,12 @@ public class ReservationValidator {
         }
     }
 
+    /**
+     * Function validates dates of start and end of the reservation in terms of proper format
+     * @param reservationStart start time provided by user
+     * @param reservationEnd start time provided by user
+     * @throws ValidateDataException thrown when users input is illegal
+     */
     private static void validateDateFormat(String reservationStart, String reservationEnd) throws ValidateDataException {
         Pattern p = Pattern.compile("^\\d\\d:\\d\\d$");
         Matcher mStart = p.matcher(reservationStart);
@@ -91,6 +135,11 @@ public class ReservationValidator {
         }
     }
 
+    /**
+     * Function checks if one of projection format radio buttons is selected
+     * @param group group of projection type radio buttons
+     * @throws ValidateDataException thrown when none of radio buttons is selected.
+     */
     private static void validateProjectionFormat(ToggleGroup group) throws ValidateDataException {
         if(group.getSelectedToggle() == null) {
             throw new ValidateDataException("Nie zaznaczono formatu projekcji!");

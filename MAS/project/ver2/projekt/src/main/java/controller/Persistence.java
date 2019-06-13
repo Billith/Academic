@@ -7,10 +7,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * Class responsible for persistence of the system
+ */
 public class Persistence {
 
     private static Path persistenceFilePath = Paths.get("system.bin");
 
+    /**
+     * Function checks if system file dump exists and if it does then restores previous system state
+     */
     public static void restoreSystemObjects() {
         if (Files.exists(persistenceFilePath)) {
             try {
@@ -22,6 +28,9 @@ public class Persistence {
         }
     }
 
+    /**
+     * Function saves current system state to file
+     */
     public static void saveSystemObjects() {
         try {
             ObjectPlus.writeExtents(new ObjectOutputStream(new FileOutputStream(persistenceFilePath.toString())));

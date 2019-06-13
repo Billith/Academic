@@ -7,6 +7,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
+/**
+ * Class responsible for starting system and GUI
+ */
 public class CinemaSystem {
 
     public static void main(String[] args) throws ValidateDataException {
@@ -16,7 +19,7 @@ public class CinemaSystem {
 
     /**
      * Creates various objects in the system for the demonstration purposes.
-     * @throws ValidateDataException
+     * @throws ValidateDataException thrown when users input is illegal
      */
     public static void createDemoObjects() throws ValidateDataException {
 

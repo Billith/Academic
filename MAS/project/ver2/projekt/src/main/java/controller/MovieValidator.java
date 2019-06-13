@@ -5,17 +5,20 @@ import javafx.scene.control.TextField;
 
 import java.util.List;
 
+/**
+ * Class responsible for validation of users input entered in window which creates new Movie object
+ */
 public class MovieValidator {
 
     /**
      * Validates input from the GUI, provided by the end user. Function doesn't validate values from Spinner controls
      * since they can only return Integer values.
-     * @param movieTitle
-     * @param movieDirector
-     * @param productionCountry
-     * @param movieDescription
-     * @param genres
-     * @throws ValidateDataException
+     * @param movieTitle title of the movie
+     * @param movieDirector director of the movie
+     * @param productionCountry production country of the movie
+     * @param movieDescription description of the movie
+     * @param genres list of genres of the movie
+     * @throws ValidateDataException thrown when users input is illegal
      */
     public static void validateInput(TextField movieTitle, TextField movieDirector, TextField productionCountry,
             TextArea movieDescription, List<String> genres) throws ValidateDataException {
