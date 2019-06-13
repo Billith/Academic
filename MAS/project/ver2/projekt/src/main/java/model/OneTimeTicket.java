@@ -25,7 +25,7 @@ public class OneTimeTicket extends Ticket {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            Event reservationEvent = reservation.getEventObject();
+            Event reservationEvent = reservation.getEvent();
             BigDecimal base = reservationEvent.getBaseTicketPrice();
 
             switch(this.type) {

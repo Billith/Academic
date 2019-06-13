@@ -24,40 +24,74 @@ import java.util.Optional;
 
 public class AddNewMovieWindow extends Application {
 
-    private ObservableList genresList = FXCollections.observableArrayList();
     public static JMetro.Style theme = JMetro.Style.LIGHT;
+
+    private ObservableList genresList = FXCollections.observableArrayList();
+
 
     @Override
     public void start(Stage primaryStage) {
 
         GridPane grid = new GridPane();
-        grid.setPadding(new Insets(10, 10, 10, 10));
-        grid.setVgap(10);
 
         TextField movieTitle = new PersistentPromptTextField("", "tytuł filmu");
         TextField movieDirector = new PersistentPromptTextField("", "reżyser");
         TextField productionCountry = new PersistentPromptTextField("","kraj produkcji");
-        Label productionYearL = new Label("Rok produkcji: ");
         TextArea movieDescription = new PersistentPromptTextArea("", "opis");
-        Label durationL = new Label("Czas trwania filmu: ");
-        Label minimalAgeL = new Label("Minimalny wiek widza: ");
+        movieDescription.setMaxWidth(450);
+
+        Label productionYear = new Label("Rok produkcji: ");
+        Label duration = new Label("Czas trwania filmu: ");
+        Label minimalAge = new Label("Minimalny wiek widza: ");
+
         TextArea genres = new PersistentPromptTextArea("", "gatunki filmowe");
         genres.setPrefHeight(50);
 
-        Spinner<Integer> prodYear = new Spinner<>(1950, 2050, LocalDate.now().getYear());
-        prodYear.setEditable(true);
-        Spinner<Integer> duration = new Spinner<>(0, 300, 0);
-        duration.setEditable(true);
-        Spinner<Integer> minimalAge = new Spinner<>(1, 25, 12);
-        minimalAge.setEditable(true);
+        Spinner<Integer> productionYearPicker = new Spinner<>(1950, 2050, LocalDate.now().getYear());
+        productionYearPicker.setEditable(true);
+        Spinner<Integer> durationPicker = new Spinner<>(0, 300, 0);
+        durationPicker.setEditable(true);
+        Spinner<Integer> minimalAgePicker = new Spinner<>(1, 25, 12);
+        minimalAgePicker.setEditable(true);
 
         VBox genresBox = new VBox();
+        HBox buttons = new HBox();
+
+        setupGenresBox(genresBox);
+        setupButtons(buttons, movieTitle, movieDirector, productionCountry, productionYearPicker, movieDescription,
+                durationPicker, minimalAgePicker, primaryStage);
+        setupGrid(grid, movieTitle, movieDirector, productionCountry, productionYear, productionYearPicker,
+                movieDescription, duration, durationPicker, minimalAge, minimalAgePicker, genresBox, buttons);
+
+        Scene scene = new Scene(grid);
+        new JMetro(theme).applyTheme(scene);
+        Platform.runLater(() -> genresBox.requestFocus());
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Dodaj nowy film");
+        primaryStage.show();
+    }
+
+    private void setupButtons(HBox buttons, TextField movieTitle, TextField movieDirector, TextField productionCountry, Spinner<Integer> productionYearPicker, TextArea movieDescription, Spinner<Integer> durationPicker, Spinner<Integer> minimalAgePicker, Stage primaryStage) {
+        Button confirm = new Button("Zatwierdź");
+        Button cancel = new Button("Anuluj");
+        buttons.getChildren().addAll(confirm, cancel);
+        buttons.setSpacing(10);
+        buttons.setAlignment(Pos.CENTER_RIGHT);
+
+        confirm.setOnAction(event -> createMovie(movieTitle, movieDirector, productionCountry, productionYearPicker,
+                movieDescription, durationPicker, minimalAgePicker, genresList, primaryStage));
+        cancel.setOnAction(event -> primaryStage.close());
+    }
+
+    private void setupGenresBox(VBox genresBox) {
         HBox addAndRemoveBox = new HBox();
         ListView<String> genresLV = new ListView<>();
         Button genresAdd = new Button("Dodaj kategorie");
         Button genresRemove = new Button("Usuń kategorie");
+
         genresLV.setPrefHeight(100);
         genresLV.setItems(genresList);
+
         genresAdd.setMaxWidth(Double.MAX_VALUE);
         genresAdd.setMaxHeight(5);
         genresAdd.setOnAction(event -> {
@@ -71,52 +105,40 @@ public class AddNewMovieWindow extends Application {
                 genresList.add(result.get());
             }
         });
+
         genresRemove.setMaxWidth(Double.MAX_VALUE);
         genresRemove.setMaxHeight(5);
         genresRemove.setOnAction(event -> {
             String selectedGenre = genresLV.getSelectionModel().getSelectedItem();
             genresList.remove(selectedGenre);
         });
+
         addAndRemoveBox.setHgrow(genresAdd, Priority.ALWAYS);
         addAndRemoveBox.setHgrow(genresRemove, Priority.ALWAYS);
         addAndRemoveBox.setSpacing(3);
         addAndRemoveBox.getChildren().addAll(genresAdd, genresRemove);
+
         genresBox.getChildren().addAll(genresLV, addAndRemoveBox);
+    }
 
-        Button confirm = new Button("Zatwierdź");
-        Button cancel = new Button("Anuluj");
-        HBox buttons = new HBox();
-        buttons.getChildren().addAll(confirm, cancel);
-        buttons.setSpacing(10);
-        buttons.setAlignment(Pos.CENTER_RIGHT);
-
-        confirm.setOnAction(event -> createMovie(movieTitle, movieDirector, productionCountry, prodYear, movieDescription, duration, minimalAge, genresList, primaryStage));
-        cancel.setOnAction(event -> primaryStage.close());
-
-        movieDescription.setMaxWidth(450);
-
+    private void setupGrid(GridPane grid, TextField movieTitle, TextField movieDirector, TextField productionCountry,
+                           Label productionYear, Spinner<Integer> productionYearPicker, TextArea movieDescription,
+                           Label duration, Spinner<Integer> durationPicker, Label minimalAge,
+                           Spinner<Integer> minimalAgePicker, VBox genresBox, HBox buttons) {
         grid.add(movieTitle, 0, 0, 2, 1);
         grid.add(movieDirector, 0, 1, 2 ,1);
         grid.add(productionCountry, 0, 2, 2, 1);
-        grid.add(productionYearL, 0, 3);
-        grid.add(prodYear, 1, 3);
+        grid.add(productionYear, 0, 3);
+        grid.add(productionYearPicker, 1, 3);
         grid.add(movieDescription, 0, 6, 2 ,1);
-        grid.add(durationL, 0, 4);
-        grid.add(duration, 1, 4);
-        grid.add(minimalAgeL, 0, 5);
-        grid.add(minimalAge, 1, 5);
+        grid.add(duration, 0, 4);
+        grid.add(durationPicker, 1, 4);
+        grid.add(minimalAge, 0, 5);
+        grid.add(minimalAgePicker, 1, 5);
         grid.add(genresBox, 0 ,7, 2 ,1);
         grid.add(buttons, 0, 8, 2 ,1);
-
-        Platform.runLater(() -> genresBox.requestFocus());
-
-        Scene scene = new Scene(grid);
-        new JMetro(theme).applyTheme(scene);
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("Dodaj nowy film");
-        primaryStage.setMaxHeight(625);
-        primaryStage.setMaxWidth(525);
-        primaryStage.show();
+        grid.setPadding(new Insets(10, 10, 10, 10));
+        grid.setVgap(10);
     }
 
     private void createMovie(TextField movieTitle, TextField movieDirector, TextField productionCountry,

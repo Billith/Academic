@@ -56,7 +56,7 @@ public class RoomReservation extends ObjectPlusPlus {
 
     }
 
-    public String getEvent() throws Exception {
+    public String getEventString() throws Exception {
         return ((Event) this.getLinks("heldEvent")[0]).getEventName();
     }
 
@@ -68,7 +68,7 @@ public class RoomReservation extends ObjectPlusPlus {
         }
     }
 
-    public Event getEventObject() {
+    public Event getEvent() {
         try {
             return (Event) this.getLinks("heldEvent")[0];
         } catch (Exception e) {
@@ -80,16 +80,16 @@ public class RoomReservation extends ObjectPlusPlus {
         return this.start;
     }
 
-    public String getStartString() {
-        return this.start.format(DateTimeFormatter.ofPattern("dd-MM-YY HH:mm"));
-    }
-
     public LocalDateTime getEnd() {
         return end;
     }
 
+    public String getStartString() {
+        return this.start.format(DateTimeFormatter.ofPattern("dd/MM/YY HH:mm"));
+    }
+
     public String getEndString() {
-        return this.end.format(DateTimeFormatter.ofPattern("dd-MM-YY HH:mm"));
+        return this.end.format(DateTimeFormatter.ofPattern("dd/MM/YY HH:mm"));
     }
 
     public void reserveSeat(Seat seat) {
@@ -106,6 +106,21 @@ public class RoomReservation extends ObjectPlusPlus {
         for(ObjectPlus obj : allReservations) {
             RoomReservation currentReservation = (RoomReservation) obj;
             if(currentReservation.start.isBefore(nextWeek)) {
+                matchingReservations.add(currentReservation);
+            }
+        }
+
+        return matchingReservations;
+    }
+
+    public static List<RoomReservation> getReservationsForNextWeek(Room room) {
+        List<RoomReservation> matchingReservations = new ArrayList<>();
+        List<ObjectPlus> allReservations = ObjectPlus.getClassExtent(RoomReservation.class);
+        LocalDateTime nextWeek = LocalDateTime.now().plusDays(7);
+
+        for(ObjectPlus obj : allReservations) {
+            RoomReservation currentReservation = (RoomReservation) obj;
+            if(currentReservation.start.isBefore(nextWeek) && currentReservation.getRoom() == room) {
                 matchingReservations.add(currentReservation);
             }
         }

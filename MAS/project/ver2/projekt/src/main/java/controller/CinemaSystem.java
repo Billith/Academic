@@ -76,6 +76,33 @@ public class CinemaSystem {
             e.printStackTrace();
         }
 
+        Room room4 = new Room(4, 3, true, RoomType.TWO_D);
+        try {
+            Seat.seatFabric(1, 1, room3);
+            Seat.seatFabric(2, 1, room3);
+            Seat.seatFabric(3, 1, room3);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Room room5 = new Room(5, 3, true, RoomType.TWO_D);
+        try {
+            Seat.seatFabric(1, 1, room3);
+            Seat.seatFabric(2, 1, room3);
+            Seat.seatFabric(3, 1, room3);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Room room6 = new Room(6, 3, true, RoomType.THREE_D);
+        try {
+            Seat.seatFabric(1, 1, room3);
+            Seat.seatFabric(2, 1, room3);
+            Seat.seatFabric(3, 1, room3);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         Movie movie1 = new Movie(
                 "The Green Mile",
                 "Frank Darabont",
@@ -120,14 +147,56 @@ public class CinemaSystem {
                 LocalDateTime.now().plusDays(1).plusHours(14),
                 LocalDateTime.now().plusDays(1).plusHours(16),
                 room1,
-                new MovieProjection(RoomType.TWO_D, BigDecimal.valueOf(22), movie1)
+                new MovieProjection(RoomType.TWO_D, BigDecimal.valueOf(22), movie2)
         );
 
         RoomReservation reservation3 = new RoomReservation(
                 LocalDateTime.now().plusDays(4).plusHours(14),
                 LocalDateTime.now().plusDays(4).plusHours(16),
+                room5,
+                new MovieProjection(RoomType.TWO_D, BigDecimal.valueOf(22), movie3)
+        );
+
+        RoomReservation reservation4 = new RoomReservation(
+                LocalDateTime.now().plusDays(6).plusHours(10),
+                LocalDateTime.now().plusDays(6).plusHours(13),
+                room4,
+                new MovieProjection(RoomType.TWO_D, BigDecimal.valueOf(28.50), movie3)
+        );
+
+        RoomReservation reservation5 = new RoomReservation(
+                LocalDateTime.now().plusDays(3).plusHours(6),
+                LocalDateTime.now().plusDays(3).plusHours(8),
                 room1,
-                new MovieProjection(RoomType.TWO_D, BigDecimal.valueOf(22), movie1)
+                new MovieProjection(RoomType.TWO_D, BigDecimal.valueOf(28.50), movie2)
+        );
+
+        RoomReservation reservation6 = new RoomReservation(
+                LocalDateTime.now().plusDays(5).plusHours(3),
+                LocalDateTime.now().plusDays(5).plusHours(5),
+                room3,
+                new MovieProjection(RoomType.THREE_D, BigDecimal.valueOf(33.25), movie1)
+        );
+
+        RoomReservation reservation7 = new RoomReservation(
+                LocalDateTime.now().plusDays(6).plusHours(1),
+                LocalDateTime.now().plusDays(6).plusHours(3),
+                room2,
+                new MovieProjection(RoomType.TWO_D, BigDecimal.valueOf(24.99), movie2)
+        );
+
+        RoomReservation reservation8 = new RoomReservation(
+                LocalDateTime.now().plusDays(2).plusHours(4),
+                LocalDateTime.now().plusDays(2).plusHours(6),
+                room3,
+                new MovieProjection(RoomType.THREE_D, BigDecimal.valueOf(30.99), movie3)
+        );
+
+        RoomReservation reservation9 = new RoomReservation(
+                LocalDateTime.now().plusDays(4).plusHours(5),
+                LocalDateTime.now().plusDays(4).plusHours(7),
+                room2,
+                new MovieProjection(RoomType.TWO_D, BigDecimal.valueOf(24.99), movie1)
         );
 
     }

@@ -2,6 +2,8 @@ package view;
 
 import controller.ReservationValidator;
 import controller.ValidateDataException;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -10,10 +12,12 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 import jfxtras.styles.jmetro8.JMetro;
 import model.*;
 
+import javax.swing.SingleSelectionModel;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -40,8 +44,83 @@ public class AddNewReservationWindow extends GridPane {
         Label price = new Label("Bazowa cena biletu");
         Label otherReservations = new Label("Rezerwacje na przyszły tydzień:");
 
+        ComboBox<Room> availableRooms = new ComboBox<>();
+        availableRooms.setItems(roomList);
+        availableRooms.valueProperty().addListener((observable, oldValue, newValue) -> {
+            nextWeekReservations.setAll(RoomReservation.getReservationsForNextWeek(newValue));
+        });
+
         HBox radioButtons = new HBox();
         ToggleGroup group = new ToggleGroup();
+
+        HBox startTimePicker = new HBox();
+        DatePicker start = new FormattedDataPicker(LocalDate.now());
+        TextField startTime = new TextField("00:00");
+
+        HBox endTimePicker = new HBox();
+        DatePicker end = new FormattedDataPicker(LocalDate.now());
+        TextField endTime = new TextField("00:00");
+
+        TextField ticketPrice = new PersistentPromptTextField("", "cena biletu (np. 22.99)");
+
+        TableView table = new TableView();
+        HBox buttons = new HBox();
+
+        setupRadioButtons(radioButtons, group, availableRooms);
+        setupStartTimePicker(startTimePicker, start, startTime);
+        setupEndTimePicker(endTimePicker, end, endTime);
+        setupTable(table);
+        setupButtons(buttons, group, start, startTime, end, endTime, availableRooms, ticketPrice, primaryStage);
+        setupGrid(this, projectionForm, radioButtons, room, availableRooms, reservationStart, startTimePicker,
+                reservationEnd, endTimePicker, price, ticketPrice, otherReservations, table, buttons);
+
+    }
+
+    private void setupButtons(HBox buttons, ToggleGroup group, DatePicker start, TextField startTime, DatePicker end, TextField endTime, ComboBox<Room> availableRooms, TextField ticketPrice, Stage primaryStage) {
+        Button confirm = new Button("Zatwierdź");
+        Button cancel = new Button("Anuluj");
+        buttons.getChildren().addAll(confirm, cancel);
+        buttons.setSpacing(10);
+        buttons.setAlignment(Pos.CENTER_RIGHT);
+
+        confirm.setOnAction(event -> createReservation(group, start, startTime, end, endTime, availableRooms, ticketPrice, primaryStage));
+        cancel.setOnAction(event -> primaryStage.close());
+    }
+
+    private void setupTable(TableView table) {
+        TableColumn eventCol = new TableColumn("Wydarzenie");
+        TableColumn roomCol = new TableColumn("Sala");
+        TableColumn startCol = new TableColumn("Od");
+        TableColumn endCol = new TableColumn("Do");
+        eventCol.setCellValueFactory(new PropertyValueFactory<RoomReservation, String>("eventString"));
+        eventCol.setSortable(false);
+        roomCol.setCellValueFactory(new PropertyValueFactory<RoomReservation, Room>("room"));
+        roomCol.setSortable(false);
+        startCol.setCellValueFactory(new PropertyValueFactory<RoomReservation, String>("startString"));
+        startCol.setSortable(false);
+        endCol.setCellValueFactory(new PropertyValueFactory<RoomReservation, String>("endString"));
+        endCol.setSortable(false);
+        table.setItems(nextWeekReservations);
+        table.getColumns().addAll(eventCol, roomCol, startCol, endCol);
+        table.setPrefWidth(650);
+        table.setEditable(false);
+        table.getSortOrder().add(startCol);
+    }
+
+    private void setupEndTimePicker(HBox endTimePicker, DatePicker end, TextField endTime) {
+        endTimePicker.getChildren().addAll(end, endTime);
+        endTimePicker.setMaxWidth(225);
+        endTimePicker.setSpacing(5);
+    }
+
+    private void setupStartTimePicker(HBox startTimePicker, DatePicker start, TextField startTime) {
+        startTime.setMinHeight(15);
+        startTimePicker.getChildren().addAll(start, startTime);
+        startTimePicker.setMaxWidth(225);
+        startTimePicker.setSpacing(5);
+    }
+
+    private void setupRadioButtons(HBox radioButtons, ToggleGroup group, ComboBox<Room> availableRooms) {
         RadioButton twoD = new RadioButton("2D");
         RadioButton threeD = new RadioButton("3D");
         twoD.setToggleGroup(group);
@@ -54,79 +133,35 @@ public class AddNewReservationWindow extends GridPane {
             if(group.getSelectedToggle() != null) {
                 if(group.getSelectedToggle().getUserData().toString().equals("2D")) {
                     roomList.setAll(Room.getRoomList(RoomType.TWO_D));
+                    availableRooms.setValue(null);
+                    nextWeekReservations.setAll(RoomReservation.getReservationsForNextWeek());
                 } else {
                     roomList.setAll(Room.getRoomList(RoomType.THREE_D));
+                    availableRooms.setValue(null);
+                    nextWeekReservations.setAll(RoomReservation.getReservationsForNextWeek());
                 }
             }
         });
+    }
 
-        HBox startTimePicker = new HBox();
-        DatePicker start = new DatePicker(LocalDate.now());
-        TextField startTime = new TextField("00:00");
-        startTime.setMinHeight(15);
-        startTimePicker.getChildren().addAll(start, startTime);
-        startTimePicker.setMaxWidth(225);
-        startTimePicker.setSpacing(5);
+    private void setupGrid(AddNewReservationWindow addNewReservationWindow, Label projectionForm, HBox radioButtons, Label room, ComboBox<Room> availableRooms, Label reservationStart, HBox startTimePicker, Label reservationEnd, HBox endTimePicker, Label price, TextField ticketPrice, Label otherReservations, TableView table, HBox buttons) {
+        addNewReservationWindow.add(projectionForm, 0, 0);
+        addNewReservationWindow.add(radioButtons, 1, 0);
+        addNewReservationWindow.add(room, 0, 1);
+        addNewReservationWindow.add(availableRooms, 1, 1);
+        addNewReservationWindow.add(reservationStart, 0, 2);
+        addNewReservationWindow.add(startTimePicker, 1, 2);
+        addNewReservationWindow.add(reservationEnd, 0, 3);
+        addNewReservationWindow.add(endTimePicker, 1, 3);
+        addNewReservationWindow.add(price, 0, 4);
+        addNewReservationWindow.add(ticketPrice, 1, 4);
+        addNewReservationWindow.add(otherReservations, 0 ,5, 2, 1);
+        addNewReservationWindow.add(table, 0, 6, 2, 1);
+        addNewReservationWindow.add(buttons, 0, 7, 2, 1);
 
-        HBox endTimePicker = new HBox();
-        DatePicker end = new DatePicker(LocalDate.now());
-        TextField endTime = new TextField("00:00");
-        endTimePicker.getChildren().addAll(end, endTime);
-        endTimePicker.setMaxWidth(225);
-        endTimePicker.setSpacing(5);
-
-        ComboBox<Room> availableRooms = new ComboBox<>();
-        availableRooms.setItems(roomList);
-
-        TextField ticketPrice = new PersistentPromptTextField("", "cena biletu (np. 22.99)");
-
-        TableView table = new TableView();
-        TableColumn eventCol = new TableColumn("Wydarzenie");
-        TableColumn roomCol = new TableColumn("Sala");
-        TableColumn startCol = new TableColumn("Od");
-        TableColumn endCol = new TableColumn("Do");
-        eventCol.setCellValueFactory(new PropertyValueFactory<RoomReservation, String>("event"));
-        eventCol.setSortable(false);
-        roomCol.setCellValueFactory(new PropertyValueFactory<RoomReservation, Room>("room"));
-        roomCol.setSortable(false);
-        startCol.setCellValueFactory(new PropertyValueFactory<RoomReservation, String>("startString"));
-        startCol.setSortable(false);
-        endCol.setCellValueFactory(new PropertyValueFactory<RoomReservation, String>("endString"));
-        endCol.setSortable(false);
-        table.setItems(nextWeekReservations);
-        table.getColumns().addAll(eventCol, roomCol, startCol, endCol);
-        table.setMinWidth(440);
-        table.setEditable(false);
-        table.getSortOrder().add(startCol);
-
-        Button confirm = new Button("Zatwierdź");
-        Button cancel = new Button("Anuluj");
-        HBox buttons = new HBox();
-        buttons.getChildren().addAll(confirm, cancel);
-        buttons.setSpacing(10);
-        buttons.setAlignment(Pos.CENTER_RIGHT);
-
-        confirm.setOnAction(event -> createReservation(group, start, startTime, end, endTime, availableRooms, ticketPrice, primaryStage));
-        cancel.setOnAction(event -> primaryStage.close());
-
-        this.add(projectionForm, 0, 0);
-        this.add(radioButtons, 1, 0);
-        this.add(reservationStart, 0, 1);
-        this.add(startTimePicker, 1, 1);
-        this.add(reservationEnd, 0, 2);
-        this.add(endTimePicker, 1, 2);
-        this.add(room, 0, 3);
-        this.add(availableRooms, 1, 3);
-        this.add(price, 0, 4);
-        this.add(ticketPrice, 1, 4);
-        this.add(otherReservations, 0 ,5, 2, 1);
-        this.add(table, 0, 6, 2, 1);
-        this.add(buttons, 0, 7, 2, 1);
-
-        this.setPadding(new Insets(10, 10, 10 ,10));
-        this.setVgap(10);
-        this.setHgap(15);
-
+        addNewReservationWindow.setPadding(new Insets(10, 10, 10 ,10));
+        addNewReservationWindow.setVgap(10);
+        addNewReservationWindow.setHgap(15);
     }
 
     private void createReservation(ToggleGroup group, DatePicker start, TextField startTime, DatePicker end,
