@@ -6,6 +6,9 @@ import javafx.util.StringConverter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Custom DataPicker control implementation with overwritten format of date displayed in control
+ */
 // https://code.makery.ch/blog/javafx-8-date-picker/
 public class FormattedDataPicker extends DatePicker {
 

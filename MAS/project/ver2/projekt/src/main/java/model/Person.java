@@ -4,6 +4,9 @@ import model.oplusplus.ObjectPlusPlus;
 
 import java.util.List;
 
+/**
+ * The class represents person in the system
+ */
 public abstract class Person extends ObjectPlusPlus {
 
     protected List<String> firstNames;

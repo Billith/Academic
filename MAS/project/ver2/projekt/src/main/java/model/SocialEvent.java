@@ -2,6 +2,9 @@ package model;
 
 import java.math.BigDecimal;
 
+/**
+ *
+ */
 public class SocialEvent extends Event {
 
     private String title;

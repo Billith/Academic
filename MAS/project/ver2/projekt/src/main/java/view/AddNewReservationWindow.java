@@ -23,18 +23,29 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-
+/**
+ * Class i responsible for setting up new grid
+ */
 public class AddNewReservationWindow extends GridPane {
 
     private Movie movie;
     private ObservableList<Room> roomList = FXCollections.observableArrayList();
     private ObservableList<RoomReservation> nextWeekReservations = FXCollections.observableArrayList(RoomReservation.getReservationsForNextWeek());
 
+    /**
+     * The constructor
+     * @param movie
+     * @param primaryStage
+     */
     public AddNewReservationWindow(Movie movie, Stage primaryStage) {
         this.movie = movie;
         setUpLayOut(primaryStage);
     }
 
+    /**
+     * Function setup grid and new scene in main window
+     * @param primaryStage
+     */
     private void setUpLayOut(Stage primaryStage) {
 
         Label projectionForm = new Label("Format projekcji");
@@ -76,6 +87,18 @@ public class AddNewReservationWindow extends GridPane {
 
     }
 
+    /**
+     * Function setup behaviour and layout of buttons
+     * @param buttons
+     * @param group
+     * @param start
+     * @param startTime
+     * @param end
+     * @param endTime
+     * @param availableRooms
+     * @param ticketPrice
+     * @param primaryStage
+     */
     private void setupButtons(HBox buttons, ToggleGroup group, DatePicker start, TextField startTime, DatePicker end, TextField endTime, ComboBox<Room> availableRooms, TextField ticketPrice, Stage primaryStage) {
         Button confirm = new Button("Zatwierdź");
         Button cancel = new Button("Anuluj");
@@ -87,6 +110,10 @@ public class AddNewReservationWindow extends GridPane {
         cancel.setOnAction(event -> primaryStage.close());
     }
 
+    /**
+     * Function setup table layout and assign data source
+     * @param table
+     */
     private void setupTable(TableView table) {
         TableColumn eventCol = new TableColumn("Wydarzenie");
         TableColumn roomCol = new TableColumn("Sala");
@@ -107,12 +134,24 @@ public class AddNewReservationWindow extends GridPane {
         table.getSortOrder().add(startCol);
     }
 
+    /**
+     * Function setup reservation end time controls
+     * @param endTimePicker
+     * @param end
+     * @param endTime
+     */
     private void setupEndTimePicker(HBox endTimePicker, DatePicker end, TextField endTime) {
         endTimePicker.getChildren().addAll(end, endTime);
         endTimePicker.setMaxWidth(225);
         endTimePicker.setSpacing(5);
     }
 
+    /**
+     * Function setup reservation start time controls
+     * @param startTimePicker
+     * @param start
+     * @param startTime
+     */
     private void setupStartTimePicker(HBox startTimePicker, DatePicker start, TextField startTime) {
         startTime.setMinHeight(15);
         startTimePicker.getChildren().addAll(start, startTime);
@@ -120,6 +159,12 @@ public class AddNewReservationWindow extends GridPane {
         startTimePicker.setSpacing(5);
     }
 
+    /**
+     * Function setup movie projection type controls behaviour and layout
+     * @param radioButtons
+     * @param group
+     * @param availableRooms
+     */
     private void setupRadioButtons(HBox radioButtons, ToggleGroup group, ComboBox<Room> availableRooms) {
         RadioButton twoD = new RadioButton("2D");
         RadioButton threeD = new RadioButton("3D");
@@ -144,6 +189,23 @@ public class AddNewReservationWindow extends GridPane {
         });
     }
 
+    /**
+     * Function adds every control to the main grid
+     * @param addNewReservationWindow
+     * @param projectionForm
+     * @param radioButtons
+     * @param room
+     * @param availableRooms
+     * @param reservationStart
+     * @param startTimePicker
+     * @param reservationEnd
+     * @param endTimePicker
+     * @param price
+     * @param ticketPrice
+     * @param otherReservations
+     * @param table
+     * @param buttons
+     */
     private void setupGrid(AddNewReservationWindow addNewReservationWindow, Label projectionForm, HBox radioButtons, Label room, ComboBox<Room> availableRooms, Label reservationStart, HBox startTimePicker, Label reservationEnd, HBox endTimePicker, Label price, TextField ticketPrice, Label otherReservations, TableView table, HBox buttons) {
         addNewReservationWindow.add(projectionForm, 0, 0);
         addNewReservationWindow.add(radioButtons, 1, 0);
@@ -164,6 +226,17 @@ public class AddNewReservationWindow extends GridPane {
         addNewReservationWindow.setHgap(15);
     }
 
+    /**
+     * Function creates new reservation with data provided through GUI
+     * @param group
+     * @param start
+     * @param startTime
+     * @param end
+     * @param endTime
+     * @param availableRooms
+     * @param ticketPrice
+     * @param primaryStage
+     */
     private void createReservation(ToggleGroup group, DatePicker start, TextField startTime, DatePicker end,
                                    TextField endTime, ComboBox<Room> availableRooms, TextField ticketPrice, Stage primaryStage) {
         try {

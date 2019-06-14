@@ -4,15 +4,40 @@ import java.io.PrintStream;
 import java.io.Serializable;
 import java.util.*;
 
-
+/**
+ * The class which simplifies connections between objects. Because it inherits from the ObjectPlus, it also helps with extent management.
+ *
+ * @author Mariusz Trzaska
+ * Fill free to send me any remarks: mtrzaska@pjwstk.edu.pl
+ *
+ * The code could be improved - see the homework in the lecture.
+ */
 public abstract class ObjectPlusPlus extends ObjectPlus implements Serializable {
+    /**
+     * Stores information about all connections of this object.
+     */
     private Map<String, Map<Object, ObjectPlusPlus>> links = new Hashtable<>();
+    /**
+     * Stores information about all parts connected with any objects.
+     */
     private static Set<ObjectPlusPlus> allParts = new HashSet<>();
 
+    /**
+     * The constructor.
+     *
+     */
     public ObjectPlusPlus() {
         super();
     }
 
+    /**
+     * Creates a new link (private, utility method).
+     * @param roleName
+     * @param reverseRoleName
+     * @param targetObject
+     * @param qualifier
+     * @param counter
+     */
     private void addLink(String roleName, String reverseRoleName, ObjectPlusPlus targetObject, Object qualifier, int counter) {
         Map<Object, ObjectPlusPlus> objectLinks;
 
@@ -34,14 +59,33 @@ public abstract class ObjectPlusPlus extends ObjectPlus implements Serializable 
         }
     }
 
+    /**
+     * Creates a new link to the given target object (optionally as qualified connection).
+     * @param roleName
+     * @param reverseRoleName
+     * @param targetObject
+     * @param qualifier If it's not null then association is qualified.
+     */
     public void addLink(String roleName, String reverseRoleName, ObjectPlusPlus targetObject, Object qualifier) {
         addLink(roleName, reverseRoleName, targetObject, qualifier, 2);
     }
 
+    /**
+     * Creates a new link to the given target object (as an ordinary association, not the qualified one).
+     * @param roleName
+     * @param reverseRoleName
+     * @param targetObject
+     */
     public void addLink(String roleName, String reverseRoleName, ObjectPlusPlus targetObject) {
         addLink(roleName, reverseRoleName, targetObject, targetObject);
     }
 
+    /**
+     * Adds an information about a connection (using a "semi" composition).
+     * @param roleName
+     * @param reverseRoleName
+     * @throws Exception
+     */
     public void addPart(String roleName, String reverseRoleName, ObjectPlusPlus partObject) throws Exception {
         if(allParts.contains(partObject)) {
             throw new Exception("The part is already connected to a whole!");
@@ -50,6 +94,12 @@ public abstract class ObjectPlusPlus extends ObjectPlus implements Serializable 
         allParts.add(partObject);
     }
 
+    /**
+     * Gets an array of connected objects for the given role name.
+     * @param roleName
+     * @return
+     * @throws Exception
+     */
     public ObjectPlusPlus[] getLinks(String roleName) throws Exception {
         Map<Object, ObjectPlusPlus> objectLinks;
 
@@ -61,6 +111,12 @@ public abstract class ObjectPlusPlus extends ObjectPlus implements Serializable 
         return (ObjectPlusPlus[]) objectLinks.values().toArray(new ObjectPlusPlus[0]);
     }
 
+    /**
+     * Shows links to the given stream.
+     * @param roleName
+     * @param stream
+     * @throws Exception
+     */
     public void showLinks(String roleName, PrintStream stream) throws Exception {
         Map<Object, ObjectPlusPlus> objectLinks;
 
@@ -77,6 +133,13 @@ public abstract class ObjectPlusPlus extends ObjectPlus implements Serializable 
         }
     }
 
+    /**
+     * Gets an object for the given qualifier (a qualified association).
+     * @param roleName
+     * @param qualifier
+     * @return
+     * @throws Exception
+     */
     public ObjectPlusPlus getLinkedObject(String roleName, Object qualifier) throws Exception {
         Map<Object, ObjectPlusPlus> objectLinks;
 
@@ -92,6 +155,11 @@ public abstract class ObjectPlusPlus extends ObjectPlus implements Serializable 
         return objectLinks.get(qualifier);
     }
 
+    /**
+     * Checks if there are any links for the given role name.
+     * @param nazwaRoli
+     * @return
+     */
     public boolean anyLink(String nazwaRoli) {
         if(!links.containsKey(nazwaRoli)) {
             return false;
@@ -101,6 +169,12 @@ public abstract class ObjectPlusPlus extends ObjectPlus implements Serializable 
         return links.size() > 0;
     }
 
+    /**
+     * Checks if there is a link to a given object as a given role.
+     * @param roleName
+     * @param targetObject
+     * @return
+     */
     public boolean isLink(String roleName, ObjectPlusPlus targetObject) {
         Map<Object, ObjectPlusPlus> objectLink;
 
@@ -110,27 +184,6 @@ public abstract class ObjectPlusPlus extends ObjectPlus implements Serializable 
 
         objectLink = links.get(roleName);
         return objectLink.containsValue(targetObject);
-    }
-
-    private void replaceObjectLinks(ObjectPlusPlus obj) {
-        for(Map<Object, ObjectPlusPlus> map : links.values()) {
-            if(map.values().contains(obj)) {
-                for(Object key : map.keySet()) {
-                    ObjectPlusPlus valueObj = map.get(key);
-                    if(valueObj == obj) {
-                        map.replace(key, valueObj, obj);
-                    }
-                }
-            }
-        }
-    }
-
-    public void replaceObjectWith(ObjectPlusPlus obj) {
-        for(Map<Object, ObjectPlusPlus> map : links.values()) {
-            for(ObjectPlusPlus object : map.values()) {
-                object.replaceObjectLinks(obj);
-            }
-        }
     }
 
 }

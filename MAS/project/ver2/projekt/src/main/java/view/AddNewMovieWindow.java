@@ -22,13 +22,20 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Class is responsible for spawning main window of GUI and setting up first displayed scene of adding new movie to the
+ * system
+ */
 public class AddNewMovieWindow extends Application {
 
     public static JMetro.Style theme = JMetro.Style.LIGHT;
 
     private ObservableList genresList = FXCollections.observableArrayList();
 
-
+    /**
+     * Start function which is automatically called on window creation
+     * @param primaryStage
+     */
     @Override
     public void start(Stage primaryStage) {
 
@@ -39,6 +46,10 @@ public class AddNewMovieWindow extends Application {
         TextField productionCountry = new PersistentPromptTextField("","kraj produkcji");
         TextArea movieDescription = new PersistentPromptTextArea("", "opis");
         movieDescription.setMaxWidth(450);
+        // https://stackoverflow.com/questions/36612545/javafx-textarea-limit
+        movieDescription.setTextFormatter(
+                new TextFormatter<String>(change -> change.getControlNewText().length() <= 200 ? change : null)
+        );
 
         Label productionYear = new Label("Rok produkcji: ");
         Label duration = new Label("Czas trwania filmu: ");
@@ -71,6 +82,18 @@ public class AddNewMovieWindow extends Application {
         primaryStage.show();
     }
 
+    /**
+     * Function setup behaviour and layout of the buttons.
+     * @param buttons
+     * @param movieTitle
+     * @param movieDirector
+     * @param productionCountry
+     * @param productionYearPicker
+     * @param movieDescription
+     * @param durationPicker
+     * @param minimalAgePicker
+     * @param primaryStage
+     */
     private void setupButtons(HBox buttons, TextField movieTitle, TextField movieDirector, TextField productionCountry, Spinner<Integer> productionYearPicker, TextArea movieDescription, Spinner<Integer> durationPicker, Spinner<Integer> minimalAgePicker, Stage primaryStage) {
         Button confirm = new Button("Zatwierdź");
         Button cancel = new Button("Anuluj");
@@ -83,6 +106,10 @@ public class AddNewMovieWindow extends Application {
         cancel.setOnAction(event -> primaryStage.close());
     }
 
+    /**
+     * Function setup behaviour and layout of the genres controls.
+     * @param genresBox
+     */
     private void setupGenresBox(VBox genresBox) {
         HBox addAndRemoveBox = new HBox();
         ListView<String> genresLV = new ListView<>();
@@ -121,6 +148,22 @@ public class AddNewMovieWindow extends Application {
         genresBox.getChildren().addAll(genresLV, addAndRemoveBox);
     }
 
+    /**
+     * Function adds every node to the main grid.
+     * @param grid
+     * @param movieTitle
+     * @param movieDirector
+     * @param productionCountry
+     * @param productionYear
+     * @param productionYearPicker
+     * @param movieDescription
+     * @param duration
+     * @param durationPicker
+     * @param minimalAge
+     * @param minimalAgePicker
+     * @param genresBox
+     * @param buttons
+     */
     private void setupGrid(GridPane grid, TextField movieTitle, TextField movieDirector, TextField productionCountry,
                            Label productionYear, Spinner<Integer> productionYearPicker, TextArea movieDescription,
                            Label duration, Spinner<Integer> durationPicker, Label minimalAge,
@@ -141,6 +184,18 @@ public class AddNewMovieWindow extends Application {
         grid.setVgap(10);
     }
 
+    /**
+     * Function creates new movie with data provided through GUI
+     * @param movieTitle
+     * @param movieDirector
+     * @param productionCountry
+     * @param prodYear
+     * @param movieDescription
+     * @param duration
+     * @param minimalAge
+     * @param genres
+     * @param primaryStage
+     */
     private void createMovie(TextField movieTitle, TextField movieDirector, TextField productionCountry,
                              Spinner<Integer> prodYear, TextArea movieDescription, Spinner<Integer> duration,
                              Spinner<Integer> minimalAge, List<String> genres, Stage primaryStage) {
@@ -162,6 +217,11 @@ public class AddNewMovieWindow extends Application {
 
     }
 
+    /**
+     * Function display prompt for user after creation of new movie
+     * @param movie
+     * @param primaryStage
+     */
     private void promptForReservationCreation(Movie movie, Stage primaryStage) {
         ButtonType yes = new ButtonType("Tak");
         ButtonType no = new ButtonType("Nie");
@@ -181,6 +241,11 @@ public class AddNewMovieWindow extends Application {
            });
     }
 
+    /**
+     * Function redirect window to the new scene of adding new reservation
+     * @param movie
+     * @param primaryStage
+     */
     private void displayNewReservationWindow(Movie movie, Stage primaryStage) {
         Scene scene = new Scene(new AddNewReservationWindow(movie, primaryStage));
         new JMetro(theme).applyTheme(scene);
@@ -188,6 +253,9 @@ public class AddNewMovieWindow extends Application {
         primaryStage.setScene(scene);
     }
 
+    /**
+     * Function launches the GUI
+     */
     public static void startUI() {
         launch();
     }

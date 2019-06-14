@@ -2,6 +2,9 @@ package view;
 
 import javafx.scene.control.TextArea;
 
+/**
+ * Custom TextArea control implementation which adds placeholder text to the control
+ */
 // https://stackoverflow.com/questions/25125563/clear-prompt-text-in-javafx-textfield-only-when-user-starts-typing
 public class PersistentPromptTextArea extends TextArea {
     PersistentPromptTextArea(String text, String prompt) {

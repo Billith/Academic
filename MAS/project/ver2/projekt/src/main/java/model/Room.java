@@ -6,6 +6,9 @@ import model.oplusplus.ObjectPlusPlus;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The class represents cinema room in the system.
+ */
 public class Room extends ObjectPlusPlus {
 
     private int roomId;
@@ -16,6 +19,13 @@ public class Room extends ObjectPlusPlus {
     private List<Seat> seats = new ArrayList<>();
     private List<Seat> allSeats = new ArrayList<>();
 
+    /**
+     * The constructor
+     * @param roomId unique id of the room assigned by cinema staff
+     * @param capacity
+     * @param isAvailable
+     * @param roomType
+     */
     public Room(int roomId, int capacity, boolean isAvailable, RoomType roomType) {
         this.roomId = roomId;
         this.capacity = capacity;
@@ -23,6 +33,12 @@ public class Room extends ObjectPlusPlus {
         this.roomType = roomType;
     }
 
+    /**
+     * Function add seat to the list of seats in the room. Function checks if given seat is not associated with another
+     * room
+     * @param seat
+     * @throws Exception thrown if seat is associated with another room
+     */
     public void addSeat(Seat seat) throws Exception {
         if(!seats.contains(seat)) {
             if(allSeats.contains(seat)) {
@@ -33,6 +49,11 @@ public class Room extends ObjectPlusPlus {
         }
     }
 
+    /**
+     * Function removes seat from the list of seat in this room
+     * @param seat
+     * @throws Exception thrown when seat which is being deleted isn't associated with this room
+     */
     public void removeSeat(Seat seat) throws Exception {
         if(!seats.contains(seat)) {
             throw new Exception("[!] This seat isn't assigned to this room");
@@ -40,6 +61,11 @@ public class Room extends ObjectPlusPlus {
         seats.remove(seat);
     }
 
+    /**
+     * Function returns all rooms that are certain room type, defined in RoomType enum.
+     * @param requiredRoom
+     * @return list of rooms of given type
+     */
     public static List<Room> getRoomList(RoomType requiredRoom) {
         List<Room> list = new ArrayList<>();
         List<ObjectPlus> allRooms = ObjectPlus.getClassExtent(Room.class);

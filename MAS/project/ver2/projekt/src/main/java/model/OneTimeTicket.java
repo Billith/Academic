@@ -4,10 +4,23 @@ import model.oplusplus.ObjectPlusPlus;
 
 import java.math.BigDecimal;
 
+/**
+ * The class represents one time ticket in the system. The ticket is associated with room reservation for particular
+ * event and reserved seat.
+ */
 public class OneTimeTicket extends Ticket {
 
     private boolean hasLongTermTicket;
 
+    /**
+     * The constructor
+     * @param isVipTicket
+     * @param type
+     * @param seller
+     * @param hasLongTermTicket
+     * @param seat
+     * @param reservation
+     */
     public OneTimeTicket(boolean isVipTicket, TicketType type, Employee seller, boolean hasLongTermTicket, Seat seat, RoomReservation reservation) {
         super(isVipTicket, type, seller);
         this.hasLongTermTicket = hasLongTermTicket;
@@ -16,6 +29,11 @@ public class OneTimeTicket extends Ticket {
         this.addLink("ticketReservation", "reservationTicket", reservation);
     }
 
+    /**
+     * Function calculates and returns final price of the ticket. It takes into account discount associated with this
+     * ticket and type of the ticket.
+     * @return
+     */
     @Override
     public double getFinalPrice() {
         if(!hasLongTermTicket) {
