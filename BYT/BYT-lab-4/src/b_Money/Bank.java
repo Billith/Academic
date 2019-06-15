@@ -75,7 +75,7 @@ public class Bank {
 		}
 		else {
 			Account account = accountlist.get(accountid);
-			account.deposit(money);
+			account.withdraw(money);
 		}
 	}
 	

@@ -3,11 +3,17 @@ package b_Money;
 import java.util.Hashtable;
 
 public class Account {
+	private String name;
 	private Money content;
 	private Hashtable<String, TimedPayment> timedpayments = new Hashtable<String, TimedPayment>();
 
 	Account(String name, Currency currency) {
+		this.name = name;
 		this.content = new Money(0, currency);
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	/**
@@ -45,7 +51,7 @@ public class Account {
 	 */
 	public void tick() {
 		for (TimedPayment tp : timedpayments.values()) {
-			tp.tick(); tp.tick();
+			tp.tick();
 		}
 	}
 	
@@ -83,7 +89,7 @@ public class Account {
 		
 		TimedPayment(Integer interval, Integer next, Money amount, Account fromaccount, Bank tobank, String toaccount) {
 			this.interval = interval;
-			this.next = next;
+			this.next = next - 1;
 			this.amount = amount;
 			this.fromaccount = fromaccount;
 			this.tobank = tobank;

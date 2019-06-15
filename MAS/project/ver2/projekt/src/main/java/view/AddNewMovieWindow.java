@@ -50,13 +50,14 @@ public class AddNewMovieWindow extends Application {
         movieDescription.setTextFormatter(
                 new TextFormatter<String>(change -> change.getControlNewText().length() <= 200 ? change : null)
         );
+        movieDescription.setWrapText(true);
 
         Label productionYear = new Label("Rok produkcji: ");
         Label duration = new Label("Czas trwania filmu: ");
         Label minimalAge = new Label("Minimalny wiek widza: ");
 
-        TextArea genres = new PersistentPromptTextArea("", "gatunki filmowe");
-        genres.setPrefHeight(50);
+        //TextArea genres = new PersistentPromptTextArea("", "gatunki filmowe");
+        //genres.setPrefHeight(50);
 
         Spinner<Integer> productionYearPicker = new Spinner<>(1950, 2050, LocalDate.now().getYear());
         productionYearPicker.setEditable(true);
@@ -233,7 +234,7 @@ public class AddNewMovieWindow extends Application {
         alert.showAndWait()
            .ifPresent(response -> {
                if (response == yes) {
-                   displayNewReservationWindow(movie, primaryStage);
+                   displayNewReservationPane(movie, primaryStage);
                }
                else if (response == no) {
                    primaryStage.close();
@@ -246,8 +247,8 @@ public class AddNewMovieWindow extends Application {
      * @param movie
      * @param primaryStage
      */
-    private void displayNewReservationWindow(Movie movie, Stage primaryStage) {
-        Scene scene = new Scene(new AddNewReservationWindow(movie, primaryStage));
+    private void displayNewReservationPane(Movie movie, Stage primaryStage) {
+        Scene scene = new Scene(new AddNewReservationPane(movie, primaryStage));
         new JMetro(theme).applyTheme(scene);
         primaryStage.setTitle("Dodaj rezerwacje sali");
         primaryStage.setScene(scene);

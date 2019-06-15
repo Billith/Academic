@@ -1,5 +1,6 @@
 package model;
 
+import model.oplusplus.ObjectPlus;
 import model.oplusplus.ObjectPlusPlus;
 
 import java.util.List;
@@ -53,18 +54,15 @@ public class Movie extends ObjectPlusPlus {
         return this.title;
     }
 
+    public static List<Movie> getMovieExtent() {
+        List<ObjectPlus> allMovies = ObjectPlus.getClassExtent(Movie.class);
+        return allMovies.stream()
+                .map(e -> (Movie) e)
+                .collect(Collectors.toList());
+    }
+
     public String toString() {
-        return String.format("[ %s title=%s, director=%s, country=%s, year=%s, desc=%s, duration=%s, age=%s, genres=%s ]",
-                this.getClass().getSimpleName(),
-                title,
-                director,
-                productionCountry,
-                productionYear,
-                description,
-                duration,
-                minimalAge,
-                genre
-        );
+        return title;
     }
 
 }

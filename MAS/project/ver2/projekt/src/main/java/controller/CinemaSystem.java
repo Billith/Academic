@@ -2,6 +2,7 @@ package controller;
 
 import model.*;
 import view.AddNewMovieWindow;
+import view.AddNewReservationWindow;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -14,7 +15,10 @@ public class CinemaSystem {
 
     public static void main(String[] args) throws ValidateDataException {
         createDemoObjects();
+        //Persistence.restoreSystemObjects();
         AddNewMovieWindow.startUI();
+        //AddNewReservationWindow.startUI();
+        Persistence.saveSystemObjects();
     }
 
     /**

@@ -1,6 +1,7 @@
 package controller;
 
 import javafx.scene.control.*;
+import model.Movie;
 import model.Room;
 
 import java.util.regex.Matcher;
@@ -31,6 +32,18 @@ public class ReservationValidator {
             validatePrice(ticketPrice);
         } catch (ValidateDataException e) {
             throw e;
+        }
+    }
+
+    public static void validateInputEx(ComboBox<Movie> movies, ToggleGroup group, DatePicker start, TextField startTime,
+                                       DatePicker end, TextField endTime, ComboBox<Room> availableRooms, TextField ticketPrice) throws ValidateDataException {
+        validateInput(group, start, startTime, end, endTime, availableRooms, ticketPrice);
+        validateMovie(movies);
+    }
+
+    private static void validateMovie(ComboBox<Movie> movies) throws ValidateDataException {
+        if(movies.getValue() == null) {
+            throw new ValidateDataException("Nie wybrano filmu!");
         }
     }
 

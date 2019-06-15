@@ -110,7 +110,7 @@ public class Money implements Comparable {
 	 * Also, since compareTo must take an Object, you will have to explicitly downcast it to a Money.
 	 * @return 0 if the values of the monies are equal.
 	 * A negative integer if this Money is less valuable than the other Money.
-	 * A positive integer if this Money is more valuiable than the other Money.
+	 * A positive integer if this Money is more valuable than the other Money.
 	 */
 	public int compareTo(Object other) {
 		Money otherMoney = ((Money)other);
