@@ -15,7 +15,6 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import jfxtras.styles.jmetro8.JMetro;
 import model.*;
-import model.oplusplus.ObjectPlus;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -31,10 +30,10 @@ public class AddNewReservationWindow extends Application {
 
     private ObservableList<Movie> allMovies = FXCollections.observableArrayList(Movie.getMovieExtent());
     private ObservableList<Room> roomList = FXCollections.observableArrayList();
-    private ObservableList<RoomReservation> nextWeekReservations = FXCollections.observableArrayList(RoomReservation.getReservationsForNextWeek());
+    private ObservableList<RoomReservation> nextWeekReservations = FXCollections.observableArrayList();
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         GridPane grid = new GridPane();
         setUpLayOut(primaryStage, grid);
 
@@ -66,7 +65,12 @@ public class AddNewReservationWindow extends Application {
         ComboBox<Room> availableRooms = new ComboBox<>();
         availableRooms.setItems(roomList);
         availableRooms.valueProperty().addListener((observable, oldValue, newValue) -> {
-            nextWeekReservations.setAll(RoomReservation.getReservationsForNextWeek(newValue));
+            // Changed
+            try {
+                nextWeekReservations.setAll(RoomReservation.getReservationsForNextWeek(newValue));
+            } catch (Exception e) {
+                nextWeekReservations.setAll(Arrays.asList());
+            }
         });
 
         HBox radioButtons = new HBox();
@@ -130,12 +134,16 @@ public class AddNewReservationWindow extends Application {
         TableColumn endCol = new TableColumn("Do");
         eventCol.setCellValueFactory(new PropertyValueFactory<RoomReservation, String>("eventString"));
         eventCol.setSortable(false);
+        eventCol.setMinWidth(200);
         roomCol.setCellValueFactory(new PropertyValueFactory<RoomReservation, Room>("room"));
         roomCol.setSortable(false);
+        roomCol.setMinWidth(150);
         startCol.setCellValueFactory(new PropertyValueFactory<RoomReservation, String>("startString"));
         startCol.setSortable(false);
+        startCol.setMinWidth(150);
         endCol.setCellValueFactory(new PropertyValueFactory<RoomReservation, String>("endString"));
         endCol.setSortable(false);
+        endCol.setMinWidth(150);
         table.setItems(nextWeekReservations);
         table.getColumns().addAll(eventCol, roomCol, startCol, endCol);
         table.setPrefWidth(650);
@@ -188,11 +196,11 @@ public class AddNewReservationWindow extends Application {
                 if(group.getSelectedToggle().getUserData().toString().equals("2D")) {
                     roomList.setAll(Room.getRoomList(RoomType.TWO_D));
                     availableRooms.setValue(null);
-                    nextWeekReservations.setAll(RoomReservation.getReservationsForNextWeek());
+                    //nextWeekReservations.setAll(RoomReservation.getReservationsForNextWeek());
                 } else {
                     roomList.setAll(Room.getRoomList(RoomType.THREE_D));
                     availableRooms.setValue(null);
-                    nextWeekReservations.setAll(RoomReservation.getReservationsForNextWeek());
+                    //nextWeekReservations.setAll(RoomReservation.getReservationsForNextWeek());
                 }
             }
         });

@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -173,19 +174,10 @@ public class RoomReservation extends ObjectPlusPlus {
      * @param room
      * @return list of reservations for given room
      */
-    public static List<RoomReservation> getReservationsForNextWeek(Room room) {
-        List<RoomReservation> matchingReservations = new ArrayList<>();
-        List<ObjectPlus> allReservations = ObjectPlus.getClassExtent(RoomReservation.class);
-        LocalDateTime nextWeek = LocalDateTime.now().plusDays(7);
-
-        for(ObjectPlus obj : allReservations) {
-            RoomReservation currentReservation = (RoomReservation) obj;
-            if(currentReservation.start.isBefore(nextWeek) && currentReservation.getRoom() == room) {
-                matchingReservations.add(currentReservation);
-            }
-        }
-
-        return matchingReservations;
+    public static List<RoomReservation> getReservationsForNextWeek(Room room) throws Exception {
+        // Changed
+        ObjectPlusPlus[] objs = room.getLinks("reservationRoom");
+        return Arrays.asList(Arrays.copyOf(objs, objs.length, RoomReservation[].class));
     }
 
 }

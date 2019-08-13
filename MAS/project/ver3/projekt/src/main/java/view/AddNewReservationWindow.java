@@ -2,10 +2,12 @@ package view;
 
 import controller.ReservationValidator;
 import controller.ValidateDataException;
+import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
@@ -13,37 +15,46 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import jfxtras.styles.jmetro8.JMetro;
 import model.*;
+import view.controls.FormattedDataPicker;
+import view.controls.PersistentPromptTextField;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Arrays;
 
 /**
  * Class i responsible for setting up new grid
  */
-public class AddNewReservationPane extends GridPane {
+@SuppressWarnings("Duplicates")
+public class AddNewReservationWindow extends Application {
 
-    private Movie movie;
+    private ObservableList<Movie> allMovies = FXCollections.observableArrayList(Movie.getMovieExtent());
     private ObservableList<Room> roomList = FXCollections.observableArrayList();
-    private ObservableList<RoomReservation> nextWeekReservations = FXCollections.observableArrayList(RoomReservation.getReservationsForNextWeek());
+    private ObservableList<RoomReservation> nextWeekReservations = FXCollections.observableArrayList();
+    private JMetro.Style theme = JMetro.Style.LIGHT;
 
-    /**
-     * The constructor
-     * @param movie
-     * @param primaryStage
-     */
-    public AddNewReservationPane(Movie movie, Stage primaryStage) {
-        this.movie = movie;
-        setUpLayOut(primaryStage);
+    @Override
+    public void start(Stage primaryStage) {
+        GridPane grid = new GridPane();
+        setUpLayOut(primaryStage, grid);
+
+        Scene scene = new Scene(grid);
+        new JMetro(JMetro.Style.LIGHT).applyTheme(scene);
+
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Dodaj nową rezerwacje");
+        primaryStage.show();
     }
 
     /**
      * Function setup grid and new scene in main window
      * @param primaryStage
      */
-    private void setUpLayOut(Stage primaryStage) {
+    private void setUpLayOut(Stage primaryStage, GridPane grid) {
 
+        Label movie = new Label("Film: ");
         Label projectionForm = new Label("Format projekcji");
         Label reservationStart = new Label("Początek rezerwacji");
         Label reservationEnd = new Label("Koniec rezerwacji");
@@ -51,10 +62,18 @@ public class AddNewReservationPane extends GridPane {
         Label price = new Label("Bazowa cena biletu");
         Label otherReservations = new Label("Rezerwacje na przyszły tydzień:");
 
+        ComboBox<Movie> movies = new ComboBox<>();
+        movies.setItems(allMovies);
+
         ComboBox<Room> availableRooms = new ComboBox<>();
         availableRooms.setItems(roomList);
         availableRooms.valueProperty().addListener((observable, oldValue, newValue) -> {
-            nextWeekReservations.setAll(RoomReservation.getReservationsForNextWeek(newValue));
+            // Changed
+            try {
+                nextWeekReservations.setAll(RoomReservation.getReservationsForNextWeek(newValue));
+            } catch (Exception e) {
+                nextWeekReservations.setAll(Arrays.asList());
+            }
         });
 
         HBox radioButtons = new HBox();
@@ -77,14 +96,15 @@ public class AddNewReservationPane extends GridPane {
         setupStartTimePicker(startTimePicker, start, startTime);
         setupEndTimePicker(endTimePicker, end, endTime);
         setupTable(table);
-        setupButtons(buttons, group, start, startTime, end, endTime, availableRooms, ticketPrice, primaryStage);
-        setupGrid(this, projectionForm, radioButtons, room, availableRooms, reservationStart, startTimePicker,
+        setupButtons(movies, buttons, group, start, startTime, end, endTime, availableRooms, ticketPrice, primaryStage);
+        setupGrid(grid, movie, movies, projectionForm, radioButtons, room, availableRooms, reservationStart, startTimePicker,
                 reservationEnd, endTimePicker, price, ticketPrice, otherReservations, table, buttons);
 
     }
 
     /**
      * Function setup behaviour and layout of buttons
+     * @param movies
      * @param buttons
      * @param group
      * @param start
@@ -95,14 +115,14 @@ public class AddNewReservationPane extends GridPane {
      * @param ticketPrice
      * @param primaryStage
      */
-    private void setupButtons(HBox buttons, ToggleGroup group, DatePicker start, TextField startTime, DatePicker end, TextField endTime, ComboBox<Room> availableRooms, TextField ticketPrice, Stage primaryStage) {
+    private void setupButtons(ComboBox<Movie> movies, HBox buttons, ToggleGroup group, DatePicker start, TextField startTime, DatePicker end, TextField endTime, ComboBox<Room> availableRooms, TextField ticketPrice, Stage primaryStage) {
         Button confirm = new Button("Zatwierdź");
         Button cancel = new Button("Anuluj");
         buttons.getChildren().addAll(confirm, cancel);
         buttons.setSpacing(10);
         buttons.setAlignment(Pos.CENTER_RIGHT);
 
-        confirm.setOnAction(event -> createReservation(group, start, startTime, end, endTime, availableRooms, ticketPrice, primaryStage));
+        confirm.setOnAction(event -> createReservation(movies, group, start, startTime, end, endTime, availableRooms, ticketPrice, primaryStage));
         cancel.setOnAction(event -> primaryStage.close());
     }
 
@@ -117,12 +137,16 @@ public class AddNewReservationPane extends GridPane {
         TableColumn endCol = new TableColumn("Do");
         eventCol.setCellValueFactory(new PropertyValueFactory<RoomReservation, String>("eventString"));
         eventCol.setSortable(false);
+        eventCol.setMinWidth(200);
         roomCol.setCellValueFactory(new PropertyValueFactory<RoomReservation, Room>("room"));
         roomCol.setSortable(false);
+        roomCol.setMinWidth(150);
         startCol.setCellValueFactory(new PropertyValueFactory<RoomReservation, String>("startString"));
         startCol.setSortable(false);
+        startCol.setMinWidth(150);
         endCol.setCellValueFactory(new PropertyValueFactory<RoomReservation, String>("endString"));
         endCol.setSortable(false);
+        endCol.setMinWidth(150);
         table.setItems(nextWeekReservations);
         table.getColumns().addAll(eventCol, roomCol, startCol, endCol);
         table.setPrefWidth(650);
@@ -175,11 +199,11 @@ public class AddNewReservationPane extends GridPane {
                 if(group.getSelectedToggle().getUserData().toString().equals("2D")) {
                     roomList.setAll(Room.getRoomList(RoomType.TWO_D));
                     availableRooms.setValue(null);
-                    nextWeekReservations.setAll(RoomReservation.getReservationsForNextWeek());
+                    //nextWeekReservations.setAll(RoomReservation.getReservationsForNextWeek());
                 } else {
                     roomList.setAll(Room.getRoomList(RoomType.THREE_D));
                     availableRooms.setValue(null);
-                    nextWeekReservations.setAll(RoomReservation.getReservationsForNextWeek());
+                    //nextWeekReservations.setAll(RoomReservation.getReservationsForNextWeek());
                 }
             }
         });
@@ -187,7 +211,9 @@ public class AddNewReservationPane extends GridPane {
 
     /**
      * Function adds every control to the main grid
-     * @param addNewReservationPane
+     * @param grid
+     * @param movie
+     * @param movies
      * @param projectionForm
      * @param radioButtons
      * @param room
@@ -202,28 +228,31 @@ public class AddNewReservationPane extends GridPane {
      * @param table
      * @param buttons
      */
-    private void setupGrid(AddNewReservationPane addNewReservationPane, Label projectionForm, HBox radioButtons, Label room, ComboBox<Room> availableRooms, Label reservationStart, HBox startTimePicker, Label reservationEnd, HBox endTimePicker, Label price, TextField ticketPrice, Label otherReservations, TableView table, HBox buttons) {
-        addNewReservationPane.add(projectionForm, 0, 0);
-        addNewReservationPane.add(radioButtons, 1, 0);
-        addNewReservationPane.add(room, 0, 1);
-        addNewReservationPane.add(availableRooms, 1, 1);
-        addNewReservationPane.add(reservationStart, 0, 2);
-        addNewReservationPane.add(startTimePicker, 1, 2);
-        addNewReservationPane.add(reservationEnd, 0, 3);
-        addNewReservationPane.add(endTimePicker, 1, 3);
-        addNewReservationPane.add(price, 0, 4);
-        addNewReservationPane.add(ticketPrice, 1, 4);
-        addNewReservationPane.add(otherReservations, 0 ,5, 2, 1);
-        addNewReservationPane.add(table, 0, 6, 2, 1);
-        addNewReservationPane.add(buttons, 0, 7, 2, 1);
+    private void setupGrid(GridPane grid, Label movie, ComboBox<Movie> movies, Label projectionForm, HBox radioButtons, Label room, ComboBox<Room> availableRooms, Label reservationStart, HBox startTimePicker, Label reservationEnd, HBox endTimePicker, Label price, TextField ticketPrice, Label otherReservations, TableView table, HBox buttons) {
+        grid.add(movie, 0, 0);
+        grid.add(movies, 1 ,0);
+        grid.add(projectionForm, 0, 1);
+        grid.add(radioButtons, 1, 1);
+        grid.add(room, 0, 2);
+        grid.add(availableRooms, 1, 2);
+        grid.add(reservationStart, 0, 3);
+        grid.add(startTimePicker, 1, 3);
+        grid.add(reservationEnd, 0, 4);
+        grid.add(endTimePicker, 1, 4);
+        grid.add(price, 0, 5);
+        grid.add(ticketPrice, 1, 5);
+        grid.add(otherReservations, 0 ,6, 2, 1);
+        grid.add(table, 0, 7, 2, 1);
+        grid.add(buttons, 0,8, 2, 1);
 
-        addNewReservationPane.setPadding(new Insets(10, 10, 10 ,10));
-        addNewReservationPane.setVgap(10);
-        addNewReservationPane.setHgap(15);
+        grid.setPadding(new Insets(10, 10, 10 ,10));
+        grid.setVgap(10);
+        grid.setHgap(15);
     }
 
     /**
      * Function creates new reservation with data provided through GUI
+     * @param movies
      * @param group
      * @param start
      * @param startTime
@@ -233,10 +262,10 @@ public class AddNewReservationPane extends GridPane {
      * @param ticketPrice
      * @param primaryStage
      */
-    private void createReservation(ToggleGroup group, DatePicker start, TextField startTime, DatePicker end,
+    private void createReservation(ComboBox<Movie> movies, ToggleGroup group, DatePicker start, TextField startTime, DatePicker end,
                                    TextField endTime, ComboBox<Room> availableRooms, TextField ticketPrice, Stage primaryStage) {
         try {
-            ReservationValidator.validateInput(group, start, startTime, end, endTime, availableRooms, ticketPrice);
+            ReservationValidator.validateInputEx(movies, group, start, startTime, end, endTime, availableRooms, ticketPrice);
             RoomType requiredRoom = (group.getSelectedToggle().getUserData().equals("2D")) ? RoomType.TWO_D : RoomType.THREE_D;
             String[] startHourAndMinute = startTime.getText().trim().split(":");
             String[] endHourAndMinute = endTime.getText().trim().split(":");
@@ -244,20 +273,27 @@ public class AddNewReservationPane extends GridPane {
                     LocalDateTime.of(start.getValue(), LocalTime.of(Integer.parseInt(startHourAndMinute[0]), Integer.parseInt(startHourAndMinute[1]))),
                     LocalDateTime.of(end.getValue(), LocalTime.of(Integer.parseInt(endHourAndMinute[0]), Integer.parseInt(endHourAndMinute[1]))),
                     availableRooms.getValue(),
-                    new MovieProjection(requiredRoom, new BigDecimal(Double.parseDouble(ticketPrice.getText())), movie)
+                    new MovieProjection(requiredRoom, new BigDecimal(Double.parseDouble(ticketPrice.getText())), movies.getValue())
             );
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "Rezerwacja została pomyślnie dodana do systemu.", ButtonType.OK);
-            new JMetro(AddNewMovieWindow.theme).applyTheme(alert.getDialogPane());
+            new JMetro(theme).applyTheme(alert.getDialogPane());
             alert.setHeaderText("Informacja");
             alert.setTitle("Informacja");
             alert.showAndWait();
             primaryStage.close();
         } catch (ValidateDataException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK);
-            new JMetro(AddNewMovieWindow.theme).applyTheme(alert.getDialogPane());
+            new JMetro(theme).applyTheme(alert.getDialogPane());
             alert.showAndWait();
         }
 
+    }
+
+    /**
+     * Function launches the GUI
+     */
+    public static void startUI() {
+        launch();
     }
 
 }

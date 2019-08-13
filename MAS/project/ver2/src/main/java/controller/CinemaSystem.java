@@ -16,8 +16,8 @@ public class CinemaSystem {
     public static void main(String[] args) throws ValidateDataException {
         createDemoObjects();
         //Persistence.restoreSystemObjects();
-        AddNewMovieWindow.startUI();
-        //AddNewReservationWindow.startUI();
+        //AddNewMovieWindow.startUI();
+        AddNewReservationWindow.startUI();
         Persistence.saveSystemObjects();
     }
 

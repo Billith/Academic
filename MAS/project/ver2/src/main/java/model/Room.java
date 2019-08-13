@@ -17,7 +17,7 @@ public class Room extends ObjectPlusPlus {
     private RoomType roomType;
 
     private List<Seat> seats = new ArrayList<>();
-    private List<Seat> allSeats = new ArrayList<>();
+    private static List<Seat> allSeats = new ArrayList<>();
 
     /**
      * The constructor
