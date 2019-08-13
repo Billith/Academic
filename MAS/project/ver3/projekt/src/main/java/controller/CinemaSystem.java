@@ -13,7 +13,8 @@ import java.util.Arrays;
 public class CinemaSystem {
 
     public static void main(String[] args) throws ValidateDataException {
-        createDemoObjects();
+        //createDemoObjects();
+        Persistence.restoreSystemObjects();
         AddNewReservationWindow.startUI();
         Persistence.saveSystemObjects();
     }

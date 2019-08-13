@@ -69,10 +69,12 @@ public class Room extends ObjectPlusPlus {
     public static List<Room> getRoomList(RoomType requiredRoom) {
         List<Room> list = new ArrayList<>();
         List<ObjectPlus> allRooms = ObjectPlus.getClassExtent(Room.class);
-        for(ObjectPlus obj : allRooms) {
-            Room currentRoom = (Room) obj;
-            if(currentRoom.roomType.toString().equals(requiredRoom.toString())) {
-                list.add(currentRoom);
+        if(allRooms != null) {
+            for (ObjectPlus obj : allRooms) {
+                Room currentRoom = (Room) obj;
+                if (currentRoom.roomType.toString().equals(requiredRoom.toString())) {
+                    list.add(currentRoom);
+                }
             }
         }
         return list;

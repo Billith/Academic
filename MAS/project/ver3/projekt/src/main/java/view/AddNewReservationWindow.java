@@ -88,6 +88,7 @@ public class AddNewReservationWindow extends Application {
         TextField endTime = new TextField("00:00");
 
         TextField ticketPrice = new PersistentPromptTextField("", "cena biletu (np. 22.99)");
+        ticketPrice.setMaxWidth(225);
 
         TableView table = new TableView();
         HBox buttons = new HBox();

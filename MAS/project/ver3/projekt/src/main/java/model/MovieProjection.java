@@ -7,8 +7,6 @@ import java.math.BigDecimal;
  */
 public class MovieProjection extends Event {
 
-    private TranslationType translationType;
-
     /**
      * The constructor
      * @param requiredRoomType

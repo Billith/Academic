@@ -3,6 +3,7 @@ package model;
 import model.oplusplus.ObjectPlus;
 import model.oplusplus.ObjectPlusPlus;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,9 +57,13 @@ public class Movie extends ObjectPlusPlus {
 
     public static List<Movie> getMovieExtent() {
         List<ObjectPlus> allMovies = ObjectPlus.getClassExtent(Movie.class);
-        return allMovies.stream()
-                .map(e -> (Movie) e)
-                .collect(Collectors.toList());
+        if(allMovies == null) {
+            return Arrays.asList();
+        } else {
+            return allMovies.stream()
+                    .map(e -> (Movie) e)
+                    .collect(Collectors.toList());
+        }
     }
 
     public String toString() {
