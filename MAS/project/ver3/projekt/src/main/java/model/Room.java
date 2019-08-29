@@ -16,7 +16,7 @@ public class Room extends ObjectPlusPlus {
     private boolean isAvailable;
     private RoomType roomType;
 
-    private List<Seat> seats = new ArrayList<>();
+    private List<Seat> seatsAssignedToRoom = new ArrayList<>();
     private static List<Seat> allSeats = new ArrayList<>();
 
     /**
@@ -40,11 +40,11 @@ public class Room extends ObjectPlusPlus {
      * @throws Exception thrown if seat is associated with another room
      */
     public void addSeat(Seat seat) throws Exception {
-        if(!seats.contains(seat)) {
+        if(!seatsAssignedToRoom.contains(seat)) {
             if(allSeats.contains(seat)) {
                 throw new Exception("[!] This seat is already assigned to another room!");
             }
-            seats.add(seat);
+            seatsAssignedToRoom.add(seat);
             allSeats.add(seat);
         }
     }
@@ -55,10 +55,10 @@ public class Room extends ObjectPlusPlus {
      * @throws Exception thrown when seat which is being deleted isn't associated with this room
      */
     public void removeSeat(Seat seat) throws Exception {
-        if(!seats.contains(seat)) {
+        if(!seatsAssignedToRoom.contains(seat)) {
             throw new Exception("[!] This seat isn't assigned to this room");
         }
-        seats.remove(seat);
+        seatsAssignedToRoom.remove(seat);
     }
 
     /**
