@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-
+import random
 
 USER_MOVES = []
 MY_MOVES = []
@@ -21,8 +21,12 @@ def user_move():
     return USER_MOVE not in 'rps' or not USER_MOVE
 
 def make_move():
+    global USER_MOVES, MY_MOVE
+    MY_MOVE = max(set(USER_MOVES), key=USER_MOVES.count) if USER_MOVES else random.choice(['r','p','s'])
+    print(f'Probably next user move: {MY_MOVE}')
     MY_MOVES.append(MY_MOVE)
     print(f'Compuer move: {MY_MOVE}')
+
 
 def fight():
     global PAYOFFS
