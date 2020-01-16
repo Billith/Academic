@@ -103,13 +103,13 @@ def print_results():
     if result > 0:
         print('[+] User won the game')
     elif result == 0:
-        print('[+] User and computer draw the game')
+        print('[+] Draw')
     else:
         print('[+] Computer won the game')
 
 
 try:
-    while len(PAYOFFS) != 30:
+    while len(PAYOFFS) != 40:
         while user_move():
             print("[!] Wrong move!")
         USER_MOVES.append(USER_MOVE)
