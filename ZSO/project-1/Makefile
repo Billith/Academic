@@ -1,8 +1,8 @@
-CC=g++
-CFLAGS=-Wall -Wextra -std=c++17
-DEPS=
-BDIR=build
-LIBS=-pthread
+CC     = g++
+CFLAGS = -Wall -Werror -Wextra -Wpedantic -std=c++17 -g
+DEPS   =
+BDIR   = build
+LIBS   = -pthread
 
 all:
 	mkdir -p $(BDIR)
@@ -12,5 +12,5 @@ run:
 	mkdir -p $(BDIR)
 	$(CC) $(CFLAGS) $(LIBS) -o $(BDIR)/main main.cpp $(DEPS) && ./$(BDIR)/main
 
-clean:
+clear:
 	rm $(BDIR)/main
