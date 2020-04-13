@@ -2,12 +2,14 @@
 #include <thread>
 #include <chrono>
 #include <mutex>
+//#include <experimental/barrier>
 
 #define DEBUG
 #define DELAY
 #define COUNT 1
 
 
+//std::barrier g_barrier;
 std::mutex g_lock;
 
 void child(int counter) {
