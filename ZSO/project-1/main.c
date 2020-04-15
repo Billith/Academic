@@ -8,7 +8,7 @@
 
 pthread_cond_t cv = PTHREAD_COND_INITIALIZER;
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-static int kindergarten = 0;
+//static int kindergarten = 0;
 
 void* child() {
 #ifdef DEBUG
