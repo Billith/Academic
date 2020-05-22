@@ -1,5 +1,5 @@
 CC     = gcc
-CFLAGS = -Wall -Werror -Wextra -Wpedantic -g
+CFLAGS = -Wall -Wextra -Wpedantic -g
 DEPS   =
 BDIR   = build
 LIBS   = -pthread
@@ -11,6 +11,10 @@ all:
 run:
 	mkdir -p $(BDIR)
 	$(CC) $(CFLAGS) $(LIBS) -o $(BDIR)/main main.c $(DEPS) && ./$(BDIR)/main
+
+debug:
+	mkdir -p $(BDIR)
+	$(CC) $(CFLAGS) $(LIBS) -o $(BDIR)/main main.c $(DEPS) -DDEBUG -DDELAY && ./$(BDIR)/main
 
 clear:
 	rm $(BDIR)/main
