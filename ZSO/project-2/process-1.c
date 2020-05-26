@@ -32,13 +32,13 @@ int main(int argc, char** argv) {
     
     int mq = msgget(que_key, IPC_CREAT | 0666);
 
+    struct my_msg init_msg;
+    init_msg.type = 1;
+    init_msg.ttl = 5;
     for (int i=0; i < 5; i++) {
-        struct my_msg msg;
-        msg.type = 1;
-        msg.ttl = 5;
-        send_stats[msg.ttl]++;
-        msgsnd(mq, &msg, sizeof(msg), 0);
-        printf("[%i] message sent:     type => %ld  ttl => %lu\n", pid, msg.type, msg.ttl);
+        send_stats[init_msg.ttl]++;
+        msgsnd(mq, &init_msg, sizeof(init_msg), 0);
+        printf("[%i] message sent:     type => %ld  ttl => %lu\n", pid, init_msg.type, init_msg.ttl);
         sleep(1);
     }
 
@@ -49,6 +49,7 @@ int main(int argc, char** argv) {
             int res = msgrcv(mq, &msg, sizeof(msg), 2L, 0);
             if (res == -1)
                 continue;
+            receive_stats[msg.ttl]++;
             printf("[%i] message recived:  type => %ld  ttl => %lu  size => %i\n", pid, msg.type, msg.ttl, res);
             if (msg.ttl <= 0) {
                 puts("ttl <= 0, removing");
@@ -58,10 +59,9 @@ int main(int argc, char** argv) {
             }
             msg.type = 1;
             msgsnd(mq, &msg, sizeof(msg), 0);
+            send_stats[msg.ttl]++;
             printf("[%i] response sent:    type => %ld  ttl => %lu\n", pid, msg.type, msg.ttl);
 
-            receive_stats[msg.ttl]++;
-            send_stats[msg.ttl]++;
             memset(&msg, 0, sizeof(msg));
             memset(&ds, 0, sizeof(ds));
         } else {

@@ -15,7 +15,7 @@ int main() {
     puts("Enter process PID or exit command");
     while (1) {
         printf("> ");
-        fgets(input, 10, stdin);
+        fgets(input, sizeof(input), stdin);
 
         if (strcmp(input, "exit\n") == 0) {
             return 0;
@@ -24,28 +24,23 @@ int main() {
         int pid = atoi(input);
         if (pid > 0) {
             kill(pid, SIGUSR1);
-            //printf("%i\n", pid);
+
             int shm_id = 0;
-            while ((shm_id = shmget(mem_key, 200, 0)) == -1) {
-                sleep(1);
-            }
+            while ((shm_id = shmget(mem_key, 200, 0)) == -1) { }
 
             char* stats;
-            while ((stats = shmat(shm_id, 0, 0)) == -1) {
-                puts("failed 2");
-                continue;
-            }
+            while ((stats = shmat(shm_id, 0, 0)) == -1) { }
 
             puts("IN:");
-            for (int i=0; i<100; i++) {
+            for (int i=0; i < 100; i++) {
                 if (stats[i] != 0)
                     printf("\tttl %i: %i\n", i, stats[i]);
             }
 
             puts("OUT:");
-            for (int i=0; i<100; i++) {
+            for (int i=0; i < 100; i++) {
                 if ((stats + 100)[i] != 0)
-                    printf("\tttl %i: %i\n", i, (stats + 100)[i]);
+                    printf("\tttl %i: %i\n", i, stats[100 + i]);
             }
             shmctl(shm_id, IPC_RMID, NULL);
         }

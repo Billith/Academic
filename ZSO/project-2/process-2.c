@@ -29,24 +29,23 @@ int main(int argc, char** argv) {
     pid_t pid = getpid();
     key_t que_key = get_que_key();
     printf("[%i] message queues key:\n  in: %i\n", pid, que_key);
-
     int mq = msgget(que_key, IPC_CREAT);
 
     struct my_msg msg;
     struct msqid_ds ds;
     while (msgctl(mq, IPC_STAT, &ds) != -1) {
         if (ds.msg_qnum > 0) {
-            int res = msgrcv(mq, &msg, sizeof(msg), 1L, 0);         
+            int res = msgrcv(mq, &msg, sizeof(msg), 1L, 0);
             if (res == -1)
                 continue;
+            receive_stats[msg.ttl]++;
             printf("[%i] message recived:  type => %ld  ttl => %lu  size => %i\n", pid, msg.type, msg.ttl, res);
-           
+
             msg.type = 2;
             msgsnd(mq, &msg, sizeof(msg), 0);
-            printf("[%i] response sent:    type => %ld  ttl => %lu\n", pid, msg.type, msg.ttl);
-            
-            receive_stats[msg.ttl]++;
             send_stats[msg.ttl]++;
+            printf("[%i] response sent:    type => %ld  ttl => %lu\n", pid, msg.type, msg.ttl);
+
             memset(&msg, 0, sizeof(msg));
             memset(&ds, 0, sizeof(ds));
         } else {
