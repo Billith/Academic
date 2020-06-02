@@ -1,4 +1,4 @@
 #!/bin/sh
 
 cd grammar
-antlr4 -Dlanguage=Python3 HttpLang.g4 -o ../parser
+antlr4 -Dlanguage=Python3 HttpLang.g4 -o ../gen
