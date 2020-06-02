@@ -8,6 +8,7 @@
 #include <sys/msg.h>
 #include <sys/sem.h>
 #include <sys/shm.h>
+#include <sys/wait.h>
 #include <sys/types.h>
 
 static int que_arr[6] = {0};
@@ -136,6 +137,6 @@ int main() {
             exit(0);
         }
     }
-    //while (1);
+    wait(NULL);
     return 0;
 }
