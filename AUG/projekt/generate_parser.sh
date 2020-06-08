@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash +x
 
 cd grammar
-antlr4 -Dlanguage=Python3 HttpLang.g4 -o ../parser
+java -jar /root/antlr-4.8-complete.jar -Dlanguage=Python3 HttpLang.g4 -o ../gen

@@ -1,7 +1,7 @@
 grammar HttpLang;
 
 program
-    : (statement ';' NEWLINE)*
+    : (statement ';' NEWLINE*)*
     ;
 
 statement
@@ -9,10 +9,7 @@ statement
     ;
 
 http_methods
-    : 'get'
-    | 'post'
-    | 'put'
-    | 'delete'
+    : 'get' | 'post' | 'put' | 'delete' | 'head' | 'patch'
     ;
 
 with_syntax
@@ -20,8 +17,7 @@ with_syntax
     ;
 
 possibility
-    : headers
-    | data
+    : headers | data
     ;
 
 headers
@@ -41,16 +37,15 @@ data
     ;
 
 link
-    : schema '://' text
+    : schema '://' text ':'? text
     ;
 
 schema
-    : 'http'
-    | 'https'
+    : 'http' | 'https'
     ;
 
 VALID_CHAR
-    : ('-' | '_' | '.' | '/')
+    : ('-' | '_' | '.' | '/' | ':')
     ;
 
 LETTER

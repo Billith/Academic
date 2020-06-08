@@ -1,3 +1,4 @@
+# sudo docker run --rm -it -v `pwd`:/data antlr
 FROM openjdk
 
 RUN yum update -y && yum install -y wget

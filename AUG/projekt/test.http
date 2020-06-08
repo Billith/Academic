@@ -1,0 +1,3 @@
+send get url[http://127.0.0.1:80/];
+send get with headers "X-Custom: Hello from python, User-Agent: HttpLang" url[http://127.0.0.1];
+send post with data "AUG takie fajne" url[http://127.0.0.1];

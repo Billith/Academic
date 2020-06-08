@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import sys
 import requests
 from json import dumps
@@ -26,11 +28,8 @@ class Listener(HttpLangListener):
 
     def enterData(self, ctx: HttpLangParser.DataContext):
         body = ctx.getText()
-        print(f'DEBUG: body => {body}')
         body = body[len("data"):]           # skip data keyword
-        print(f'DEBUG: body => {body}')
         body = body[1:-1]                   # skip quotes
-        print(f'DEBUG: body => {body}')
         self.current_request.body = body
 
     def enterLink(self, ctx: HttpLangParser.LinkContext):
@@ -61,12 +60,12 @@ def send_request(http_request: HttpContext) -> str:
     return result
 
 def main():
-    test = '''send get url[http://127.0.0.1];
-    send get with headers "X-Custom: Hello from python, User-Agent: HttpLang" url[http://127.0.0.1];
-    send post with data "AUG takie fajne" url[http://127.0.0.1];
-    '''
+    if len(sys.argv) != 2:
+        print(f'Usage: {sys.argv[0]} [script]')
+        return
+    code = open(sys.argv[1], 'r').read()
     result = []
-    input_stream = antlr4.InputStream(test)
+    input_stream = antlr4.InputStream(code)
     lexer = HttpLangLexer(input_stream)
     stream = antlr4.CommonTokenStream(lexer)
     parser = HttpLangParser(stream)
