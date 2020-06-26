@@ -49,6 +49,21 @@ namespace response {
                             "</body>\r\n"
                             "</html>\r\n\r\n";
 
+    const char* SERVER_ERROR = "HTTP/1.1 500 Internal Server Error\r\n"
+                            "Content-Type: text/html\r\n"
+                            "Server: l33t server\r\n"
+                            "\r\n"
+                            "<html>\r\n"
+                            "\t<head>\r\n"
+                            "\t\t<title>500 Internal Server Error</title>\r\n"
+                            "\t</head>\r\n"
+                            "<body>\r\n"
+                            "\t<h1>Internal Server Error</h1>\r\n"
+                            "\t<hr>\r\n"
+                            "\tWebserver v0.1 ALPHA\r\n"
+                            "</body>\r\n"
+                            "</html>\r\n\r\n";
+
     const char* OK_DEFAULT = "HTTP/1.1 200 OK\r\n"
                             "Content-Type: text/html\r\n"
                             "Server: l33t server\r\n"
@@ -149,7 +164,7 @@ namespace request {
             request_parsed->insert(
                 std::pair<std::string, std::string>(line.substr(0, colon_offset), line.substr(colon_offset + 2, line.size() - 1)
             ));
-        }
+        } 
     }
 
     void send_response(int socket, std::map<std::string, std::string>* request) {
@@ -166,7 +181,12 @@ namespace request {
         printf("Requested target after sanitization %s\n", requested_file.c_str());
 
         if (requested_file.rfind("/tasks", 0) == 0) {
-            handle_job_requests(socket, request);
+            try {
+                handle_job_requests(socket, request);
+            } catch (const std::exception &e) {
+                std::cout << "[!] Something went wrong while handling job request" << std::endl;
+                send(socket, response::SERVER_ERROR, strlen(response::SERVER_ERROR), 0);
+            }
             return;
         } else if (requested_file == "/") {
             if(exists("index.html")) {
